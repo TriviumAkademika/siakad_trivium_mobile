@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 //Logo
-                Image.asset('assets/logo/Logo.png'),
+                Image.asset('lib/assets/logo/Logo.png'),
                 const Text('Trivium Akademika', style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
