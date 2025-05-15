@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -25,5 +26,6 @@ flutter:
   uses-material-design: true
   assets:
     - lib/assets/logo/Logo.png
+    - lib/assets/images/avatar.jpg
 
 
