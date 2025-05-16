@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:siakad_trivium/data/dummy/profile_dummy.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:siakad_trivium/views/widgets/profile_info_tile.dart';
+import 'package:siakad_trivium/views/homepage/homepage.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -28,6 +29,16 @@ class _ProfilePageState extends State<ProfilePage> {
           centerTitle: true,
           backgroundColor: const Color(0xFFFDFDFD),
           elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.chevron_left, color: Colors.black),
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const Homepage()),
+                (route) => false,
+              );
+            },
+          ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -161,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       'Logout',
                                       style: GoogleFonts.plusJakartaSans(
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 16
+                                        fontSize: 16,
                                       ),
                                     ),
                                   ),
