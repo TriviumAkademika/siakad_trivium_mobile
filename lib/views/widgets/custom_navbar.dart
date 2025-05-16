@@ -32,8 +32,7 @@ class CustomNavbar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             children: [
               const CircleAvatar(
-                backgroundColor: Colors.black,
-                child: Icon(Icons.person, color: Colors.white),
+                backgroundImage: AssetImage('lib/assets/images/avatar.jpg'),
               ),
               /* IconButton(
                 icon: const Icon(Icons.arrow_drop_down),
