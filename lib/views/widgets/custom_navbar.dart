@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomNavbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -19,26 +20,29 @@ class CustomNavbar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Text(
         title,
-        style: const TextStyle(
+        style: GoogleFonts.plusJakartaSans(
           fontWeight: FontWeight.w500,
           fontSize: 20,
         ),
       ),
-      centerTitle: false,
+      centerTitle: true,
       actions: [
-        Row(
-          children: [
-            const CircleAvatar(
-              backgroundColor: Colors.black,
-              child: Icon(Icons.person, color: Colors.pink),
-            ),
-            IconButton(
-              icon: const Icon(Icons.arrow_drop_down),
-              onPressed: () {
-                // Tambahkan aksi dropdown di sini kalau perlu
-              },
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: Row(
+            children: [
+              const CircleAvatar(
+                backgroundColor: Colors.black,
+                child: Icon(Icons.person, color: Colors.white),
+              ),
+              /* IconButton(
+                icon: const Icon(Icons.arrow_drop_down),
+                onPressed: () {
+                  // Tambahkan aksi dropdown di sini kalau perlu
+                },
+              ), */
+            ],
+          ),
         ),
       ],
       backgroundColor: Colors.white,
