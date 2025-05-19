@@ -35,7 +35,7 @@ class HariCard extends StatelessWidget {
               child: Text(
                 hari[index],
                 style: GoogleFonts.plusJakartaSans(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: isSelected ? putih : brand950,
                 ),

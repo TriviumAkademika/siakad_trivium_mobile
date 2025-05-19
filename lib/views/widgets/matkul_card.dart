@@ -7,7 +7,7 @@ class MatkulCard extends StatelessWidget {
   final String namaMatkul;
   final String dosen1;
   final String? dosen2;
-  final String nilai;
+  final String label;
 
   const MatkulCard({
     Key? key,
@@ -15,7 +15,7 @@ class MatkulCard extends StatelessWidget {
     required this.namaMatkul,
     required this.dosen1,
     this.dosen2,
-    required this.nilai,
+    required this.label,
   }) : super(key: key);
 
   @override
@@ -41,6 +41,7 @@ class MatkulCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // Expanded Matkul + Dosen
               Expanded(
                 flex: 5,
                 child: Container(
@@ -88,29 +89,38 @@ class MatkulCard extends StatelessWidget {
                   ),
                 ),
               ),
-              // Nilai atau jam matkul
+
+              // Expanded label berupa nilai atau jam
               Expanded(
-                flex: 1,
+                flex: label.length <= 2 ? 1 : 1,
                 child: Container(
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  padding:
+                      label.length <= 2
+                          ? const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          )
+                          : const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 8,
+                          ),
                   decoration: BoxDecoration(
-                    color: nilai.length <= 2 ? brand100 : brand100,
-                    border: Border.all(color: brand950, width: 1.2),
+                    color: brand100,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    nilai,
+                    label,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.plusJakartaSans(
-                      fontSize: nilai.length <= 2 ? 14 : 12,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: hitam,
                     ),
+                    maxLines: 2,
                   ),
                 ),
               ),
-
             ],
           ),
         ],
