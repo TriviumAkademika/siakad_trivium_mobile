@@ -4,6 +4,7 @@ import 'package:siakad_trivium/data/dummy/profile_dummy.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:siakad_trivium/views/widgets/profile_info_tile.dart';
 import 'package:siakad_trivium/views/homepage/homepage.dart';
+import 'package:siakad_trivium/views/auth/login.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -131,9 +132,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                 actions: [
                                   ElevatedButton(
                                     onPressed: () {
-                                      Navigator.pop(context);
-                                      // TODO: Aksi log out
+                                      Navigator.pop(context); // Tutup dialog
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => const LoginPage(),
+                                        ),
+                                        (route) => false,
+                                      );
                                     },
+
                                     style: ButtonStyle(
                                       backgroundColor:
                                           MaterialStateProperty.resolveWith((
