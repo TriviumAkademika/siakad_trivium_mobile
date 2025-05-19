@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:siakad_trivium/views/profile/profile.dart';
+import 'package:siakad_trivium/views/widgets/custom_navbar.dart';
 
 class NewsDetailPage extends StatelessWidget {
   const NewsDetailPage({super.key});
@@ -9,42 +10,7 @@ class NewsDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFDFDFD),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFFDFDFD),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.chevron_left, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-
-        centerTitle: true,
-        title: Text(
-          'Berita',
-          style: GoogleFonts.plusJakartaSans(
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
-            fontSize: 20,
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 24),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()),
-                );
-              },
-              child: CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 18,
-                backgroundImage: AssetImage('lib/assets/images/avatar.jpg'),
-              ),
-            ),
-          ),
-        ],
-      ),
+      appBar: CustomNavbar(title: 'Berita'),
       body: SingleChildScrollView(
         child: Column(
           children: [
