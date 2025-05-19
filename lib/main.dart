@@ -17,7 +17,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(), // Ganti HomePage jadi FrsScreen
+      home:LoginPage(), // Ganti HomePage jadi FrsScreen
     );
   }
 }
