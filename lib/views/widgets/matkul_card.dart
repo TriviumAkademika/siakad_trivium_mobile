@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:siakad_trivium/style.dart';
 
 class MatkulCard extends StatelessWidget {
   final String jenisMatkul;
@@ -23,7 +24,7 @@ class MatkulCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Color(0xFFEEF6FF),
+        color: brand50,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,7 +34,7 @@ class MatkulCard extends StatelessWidget {
             style: GoogleFonts.plusJakartaSans(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: Colors.black,
+              color: hitam,
             ),
           ),
           const SizedBox(height: 8),
@@ -41,7 +42,7 @@ class MatkulCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                // Expanded harus langsung di sini
+                flex: 5,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -49,7 +50,7 @@ class MatkulCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     border: Border(
-                      left: BorderSide(color: Color(0xFF152556), width: 2.0),
+                      left: BorderSide(color: brand950, width: 2.0),
                     ),
                   ),
                   child: Column(
@@ -60,7 +61,7 @@ class MatkulCard extends StatelessWidget {
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black,
+                          color: hitam,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -70,7 +71,7 @@ class MatkulCard extends StatelessWidget {
                         dosen1,
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 14,
-                          color: Colors.black,
+                          color: hitam,
                         ),
                       ),
                       if (dosen2 != null) ...[
@@ -79,7 +80,7 @@ class MatkulCard extends StatelessWidget {
                           dosen2!,
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 14,
-                            color: Colors.black,
+                            color: hitam,
                           ),
                         ),
                       ],
@@ -87,20 +88,29 @@ class MatkulCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: Color(0xFFDAEBFF),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  nilai,
-                  style: TextStyle(fontSize: 14, color: Colors.black),
+              // Nilai atau jam matkul
+              Expanded(
+                flex: 1,
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: nilai.length <= 2 ? brand100 : brand100,
+                    border: Border.all(color: brand950, width: 1.2),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    nilai,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: nilai.length <= 2 ? 14 : 12,
+                      fontWeight: FontWeight.w600,
+                      color: hitam,
+                    ),
+                  ),
                 ),
               ),
+
             ],
           ),
         ],

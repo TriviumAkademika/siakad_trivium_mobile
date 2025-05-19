@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:siakad_trivium/style.dart';
 
 class FilterBar extends StatefulWidget {
   final String label;
@@ -30,7 +31,7 @@ class _FilterBarState extends State<FilterBar> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
-            color: const Color(0xFFFDFDFD),
+            color: bgColor,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: const Color(0xFF000000)),
           ),
@@ -40,7 +41,7 @@ class _FilterBarState extends State<FilterBar> {
               widget.hintText,
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 16,
-                color: Colors.black54,
+                color: hintText,
               ),
             ),
             onChanged: (value) {
@@ -57,7 +58,7 @@ class _FilterBarState extends State<FilterBar> {
             isExpanded: true,
             underline: const SizedBox(),
             style: GoogleFonts.plusJakartaSans(
-              color: Colors.black,
+              color: hitam,
               fontSize: 16,
             ),
             icon: const Icon(Icons.keyboard_arrow_down),

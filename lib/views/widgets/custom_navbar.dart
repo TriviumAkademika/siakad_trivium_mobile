@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:siakad_trivium/style.dart';
 
 class CustomNavbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -44,7 +45,7 @@ class CustomNavbar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ],
-      backgroundColor: Colors.white,
+      backgroundColor: bgColor,
       elevation: 1,
       foregroundColor: Colors.black,
     );

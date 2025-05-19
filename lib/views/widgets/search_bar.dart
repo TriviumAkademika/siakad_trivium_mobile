@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siakad_trivium/style.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomSearchBar extends StatefulWidget {
@@ -21,13 +22,13 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFDFDFD),
+        color: bgColor,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: const Color(0xFF000000)),
       ),
       child: Row(
         children: [
-          const Icon(Icons.search, color: Colors.black54),
+          const Icon(Icons.search, color: Colors.black),
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
@@ -37,13 +38,13 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                 hintText: 'Cari di sini',
                 hintStyle: GoogleFonts.plusJakartaSans(
                   fontSize: 16,
-                  color: Colors.black54,
+                  color: hintText,
                 ),
                 border: InputBorder.none,
               ),
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 16,
-                color: Colors.black,
+                color: hitam,
               ),
             ),
           ),
