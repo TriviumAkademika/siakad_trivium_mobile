@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:async'; // Ditambahkan untuk TimeoutException
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:siakad_trivium/views/homepage/homepage.dart'; // Pastikan path ini benar
+import 'package:provider/provider.dart';
+import 'package:siakad_trivium/viewmodels/login_viewmodel.dart'; // Sesuaikan path
+import 'package:siakad_trivium/views/homepage/homepage.dart'; // Sesuaikan path
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,13 +14,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  bool _isLoading = false;
-
-  // PASTIKAN URL INI BENAR SESUAI CARA ANDA MENJALANKAN APLIKASI & SERVER:
-  // Emulator Android: 'http://10.0.2.2:8000/api/login'
-  // Device Fisik: 'http://IP_LOKAL_KOMPUTER_ANDA:8000/api/login' (dan server Laravel --host=0.0.0.0)
-  // Web (Chrome): 'http://127.0.0.1:8000/api/login'
-  final String _apiUrl = 'http://10.0.2.2:8000/api/login';
 
   @override
   void dispose() {
@@ -31,174 +22,121 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
+  Future<void> _handleLogin(LoginViewModel viewModel) async {
     if (!mounted) return;
 
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
-      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Email dan password tidak boleh kosong')),
       );
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    bool success = await viewModel.attemptLogin(email, password);
 
-    try {
-      final response = await http.post(
-        Uri.parse(_apiUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-        },
-        body: jsonEncode(<String, String>{
-          'email': email,
-          'password': password,
-        }),
-      ).timeout(const Duration(seconds: 20)); // Timeout request 20 detik
+    if (!mounted) return; // Cek mounted lagi setelah await
 
-      if (!mounted) return;
-
-      final responseData = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        final String token = responseData['token'];
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('user_token', token);
-
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(responseData['message'] ?? 'Login berhasil')),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Homepage()),
-        );
-      } else if (response.statusCode == 401 || response.statusCode == 403) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(responseData['message'] ?? 'Autentikasi gagal')),
-        );
-      } else {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  'Error: ${responseData['message'] ?? 'Gagal login'} (Status: ${response.statusCode})')),
-        );
-      }
-    } on TimeoutException catch (e) {
-      if (!mounted) return;
-      print('Error saat login (TimeoutException): $e');
+    if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Koneksi ke server time out. Coba lagi.')),
+        SnackBar(content: Text(viewModel.message.isNotEmpty ? viewModel.message : 'Login berhasil')),
       );
-    } on http.ClientException catch (e) { // Termasuk SocketException
-      if (!mounted) return;
-      print('Error saat login (ClientException): $e');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Homepage()),
+      );
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal terhubung ke server: ${e.message}')),
+        SnackBar(content: Text(viewModel.message.isNotEmpty ? viewModel.message : 'Login gagal')),
       );
-    } on FormatException catch (e) {
-      if (!mounted) return;
-      print('Error saat login (FormatException): $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Format data dari server tidak sesuai: ${e.message}')),
-      );
-    } catch (e) { // Penampung error umum lainnya
-      if (!mounted) return;
-      print('Error saat login (Umum): $e');
-      print('Tipe Error (Umum): ${e.runtimeType}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi kesalahan: ${e.toString()}')),
-      );
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset('lib/assets/logo/Logo.png'),
-                const Text(
-                  'Trivium Akademika',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Email', style: TextStyle(fontWeight: FontWeight.w500)),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    hintText: 'email@example.com',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Password', style: TextStyle(fontWeight: FontWeight.w500)),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: _obscurePassword,
-                  decoration: InputDecoration(
-                    hintText: 'password',
-                    suffixIcon: IconButton(
-                      icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
-                      onPressed: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
-                    ),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: _isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            backgroundColor: Colors.blue[900],
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          ),
-                          onPressed: _handleLogin,
-                          child: const Text('Login', style: TextStyle(fontSize: 16, color: Colors.white)),
+    // Menggunakan Consumer untuk mendengarkan perubahan pada LoginViewModel
+    return ChangeNotifierProvider(
+      create: (context) => LoginViewModel(),
+      child: Consumer<LoginViewModel>(
+        builder: (context, viewModel, child) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('lib/assets/logo/Logo.png'), // Pastikan path logo benar
+                      const Text(
+                        'Trivium Akademika',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 20),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Email', style: TextStyle(fontWeight: FontWeight.w500)),
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          hintText: 'email@example.com',
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                         ),
+                        enabled: viewModel.state != ViewState.loading, // Disable saat loading
+                      ),
+                      const SizedBox(height: 8),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Password', style: TextStyle(fontWeight: FontWeight.w500)),
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        decoration: InputDecoration(
+                          hintText: 'password',
+                          suffixIcon: IconButton(
+                            icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                        ),
+                        enabled: viewModel.state != ViewState.loading, // Disable saat loading
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: double.infinity,
+                        child: viewModel.state == ViewState.loading
+                            ? const Center(child: CircularProgressIndicator())
+                            : ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  backgroundColor: Colors.blue[900],
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                ),
+                                onPressed: () => _handleLogin(viewModel),
+                                child: const Text('Login', style: TextStyle(fontSize: 16, color: Colors.white)),
+                              ),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
