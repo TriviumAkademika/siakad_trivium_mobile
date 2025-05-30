@@ -17,18 +17,11 @@ class _JadwalState extends State<Jadwal> {
   int selectedIndex = 0; // Menyimpan index hari yang dipilih
 
   @override
-  void dispose() {
-    _scrollController.dispose(); // Mencegah memory leak
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: CustomNavbar(title: 'Jadwal'),
       body: CustomScrollbar(
-        controller: _scrollController,
         child: SingleChildScrollView(
           controller: _scrollController,
           padding: const EdgeInsets.all(16),

@@ -14,23 +14,13 @@ class Nilai extends StatefulWidget {
 }
 
 class _NilaiState extends State<Nilai> {
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  void dispose() {
-    _scrollController.dispose(); // Mencegah memory leak
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: CustomNavbar(title: 'Kartu Hasil Studi'),
       body: CustomScrollbar(
-        controller: _scrollController,
         child: SingleChildScrollView(
-          controller: _scrollController,
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
