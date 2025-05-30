@@ -10,6 +10,10 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^6.1.0
+  # supabase_flutter: ^1.10.17
+  http: ^1.2.1 # Atau versi terbaru
+  shared_preferences: ^2.2.3 # Atau versi terbaru
+  provider: ^6.1.2 # Atau versi terbaru
 
 dev_dependencies:
   flutter_test:
