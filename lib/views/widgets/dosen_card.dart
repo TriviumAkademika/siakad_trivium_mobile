@@ -43,7 +43,7 @@ class DosenCard extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border(
                 left: BorderSide(color: brand950, width: 2.0),
-              ), // Menggunakan warna dari style.dart
+              ),
             ),
             child: Row(
               crossAxisAlignment:
@@ -80,9 +80,7 @@ class DosenCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  width: 16,
-                ), // Memberi sedikit jarak antara teks dan ikon
+                const SizedBox(width: 24),
                 // Bagian kanan: Ikon Profil Placeholder
                 SizedBox(
                   width: 60, // Lebar yang Anda inginkan
@@ -90,17 +88,15 @@ class DosenCard extends StatelessWidget {
                   child: Container(
                     // Tambahkan Container untuk latar belakang dan border radius
                     decoration: BoxDecoration(
-                      color:
-                          Colors
-                              .blueGrey[800], // Warna latar belakang ikon sesuai mockup
+                      color: brand950,
                       borderRadius: BorderRadius.circular(8), // Sudut membulat
                     ),
                     child: Center(
                       // Untuk menengahkan ikon di dalam Container
                       child: Icon(
                         Icons.person, // Ikon orang generik
-                        size: 48, // Sesuaikan ukuran ikon
-                        color: Colors.white, // Warna ikon
+                        size: 32, // Sesuaikan ukuran ikon
+                        color: putih, // Warna ikon
                       ),
                     ),
                   ),
