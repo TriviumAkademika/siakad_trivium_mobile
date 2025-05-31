@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:siakad_trivium/views/auth/login.dart'; // Pastikan path ini benar
+import 'package:siakad_trivium/views/auth/login.dart';
+import 'package:siakad_trivium/views/dosen/dosen.dart';
+import 'package:siakad_trivium/views/jadwal/jadwal.dart';
+import 'package:siakad_trivium/views/news/news_detail.dart';
+import 'package:siakad_trivium/views/nilai/nilai.dart';// Pastikan path ini benar
 
 // Tidak perlu import supabase_flutter lagi
 // import 'package:supabase_flutter/supabase_flutter.dart';
@@ -24,7 +28,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(), // Langsung ke LoginPage
+      home: Dosen(), // Langsung ke LoginPage
     );
   }
 }
