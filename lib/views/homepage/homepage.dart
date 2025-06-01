@@ -1,14 +1,103 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart'; // Pastikan provider diimport
+import 'package:siakad_trivium/viewmodels/profile_viewmodel.dart'; // Sesuaikan path jika perlu
+import 'package:siakad_trivium/models/user_profile_model.dart'; // Sesuaikan path jika perlu (untuk enum ProfileState)
 import 'package:siakad_trivium/views/profile/profile.dart';
 import 'package:siakad_trivium/views/news/news_detail.dart';
+import 'package:siakad_trivium/views/dosen/dosen.dart';
+import 'package:siakad_trivium/views/jadwal/jadwal.dart';
+import 'package:siakad_trivium/views/nilai/nilai.dart';
 
-
-class Homepage extends StatelessWidget {
+class Homepage extends StatefulWidget {
   const Homepage({super.key});
 
   @override
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+  @override
+  void initState() {
+    super.initState();
+    // Panggil fetchUserProfile setelah frame pertama jika data belum ada atau belum sedang dimuat.
+    // Ini memberi kesempatan ProfileViewModel untuk memuat data jika Homepage adalah layar pertama.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final profileViewModel = Provider.of<ProfileViewModel>(context, listen: false);
+      // Cek apakah userProfile masih null DAN state bukan loading (artinya belum ada upaya fetch atau sudah error)
+      // Atau jika state adalah initial (belum pernah fetch sama sekali)
+      if ((profileViewModel.userProfile == null &&
+              profileViewModel.profileState != ProfileState.loading) ||
+          profileViewModel.profileState == ProfileState.initial) {
+        profileViewModel.fetchUserProfile();
+      }
+    });
+  }
+
+  Widget _buildUserName(ProfileViewModel viewModel) {
+    // Jika sedang loading dan belum ada data user sama sekali
+    if (viewModel.profileState == ProfileState.loading && viewModel.userProfile == null) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 20, // Ukuran progress indicator kecil
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 2.0,
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF152556)),
+            ),
+          ),
+          SizedBox(width: 8),
+          Text(
+            'Memuat...',
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 16, // Sedikit lebih kecil agar serasi dengan progress
+              fontWeight: FontWeight.w500, // Tidak terlalu bold saat loading
+              color: Colors.grey[600],
+            ),
+          )
+        ],
+      );
+    }
+
+    // Jika sudah ada data user (walaupun mungkin sedang refresh di background)
+    // atau jika sudah selesai loading (berhasil atau error tapi data sebelumnya ada)
+    if (viewModel.userProfile != null) {
+      final userProfileData = viewModel.userProfile!.data;
+      final user = userProfileData.user;
+      final mahasiswaDetails = userProfileData.mahasiswaDetails;
+      // Logika penentuan nama, konsisten dengan ProfilePage
+      String displayName = mahasiswaDetails?.nama?.isNotEmpty == true
+          ? mahasiswaDetails!.nama!
+          : (user.name?.isNotEmpty == true ? user.name! : 'Nama Mahasiswa');
+
+      return Text(
+        displayName,
+        style: GoogleFonts.plusJakartaSans(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+      );
+    }
+
+    // Fallback jika error dan tidak ada data user sama sekali, atau state initial tanpa data
+    return Text(
+      'Nama Mahasiswa',
+      style: GoogleFonts.plusJakartaSans(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Menggunakan context.watch agar widget ini rebuild saat ProfileViewModel berubah
+    final profileViewModel = context.watch<ProfileViewModel>();
+
     return Scaffold(
       backgroundColor: const Color(0xFFFDFDFD),
       body: SingleChildScrollView(
@@ -35,11 +124,14 @@ class Homepage extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 27,
                       backgroundImage: AssetImage(
-                        'lib/assets/images/avatar.jpg',
+                        'lib/assets/images/avatar.jpg', // Pastikan path ini benar
                       ),
+                      onBackgroundImageError: (exception, stackTrace) {
+                        // Handle error jika gambar avatar gagal dimuat
+                        // print('Error loading avatar: $exception');
+                      },
                     ),
                   ),
-
                   const SizedBox(width: 12),
                   // Teks sambutan
                   Expanded(
@@ -55,13 +147,8 @@ class Homepage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 4),
-                        Text(
-                          'Selvi Riska Nisa',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        // Menggunakan widget builder untuk nama pengguna
+                        _buildUserName(profileViewModel),
                       ],
                     ),
                   ),
@@ -71,21 +158,22 @@ class Homepage extends StatelessWidget {
                       Icons.notifications_active_outlined,
                       color: Color(0xFF152556),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      // TODO: Implement notification navigation or action
+                    },
                   ),
                 ],
               ),
 
               const SizedBox(height: 22),
               Text(
-                'Semester Genap Tahun Ajaran 2024/2025',
+                'Semester Genap Tahun Ajaran 2024/2025', // Ini bisa juga dinamis jika perlu
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 10,
                   color: Colors.black,
                 ),
               ),
               const SizedBox(height: 24),
-              // 💬 Kartu Berita (dummy)
               // 💬 Kartu Berita (custom card dengan shadow fleksibel)
               Container(
                 decoration: BoxDecoration(
@@ -95,13 +183,13 @@ class Homepage extends StatelessWidget {
                     BoxShadow(
                       color: Colors.black.withOpacity(
                         0.15,
-                      ), // bisa diubah jadi 0.2 atau 0.3
-                      blurRadius: 4, // semakin besar, semakin lembut
+                      ),
+                      blurRadius: 4,
                       spreadRadius: 0,
                       offset: const Offset(
                         1,
                         2,
-                      ), // posisi bayangan (horizontal, vertical)
+                      ),
                     ),
                   ],
                 ),
@@ -168,7 +256,6 @@ class Homepage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
-
               // 📦 Menu grid
               Align(
                 alignment: Alignment.center,
@@ -176,9 +263,36 @@ class Homepage extends StatelessWidget {
                   spacing: 52,
                   runSpacing: 24,
                   children: [
-                    menuColumn('lib/assets/ikon/chart.png', 'Nilai'),
-                    menuColumn('lib/assets/ikon/calendar.png', 'Jadwal'),
-                    menuColumn('lib/assets/ikon/boy.png', 'Dosen'),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Nilai(),
+                          ),
+                        );
+                      },
+                      child: menuColumn('lib/assets/ikon/chart.png', 'Nilai')),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Dosen(),
+                          ),
+                        );
+                      },
+                      child: menuColumn('lib/assets/ikon/calendar.png', 'Jadwal')),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Dosen(),
+                          ),
+                        );
+                      },
+                      child: menuColumn('lib/assets/ikon/boy.png', 'Dosen')),
                     menuColumn('lib/assets/ikon/folder.png', 'FRS'),
                   ],
                 ),
@@ -190,6 +304,8 @@ class Homepage extends StatelessWidget {
     );
   }
 
+  // Helper method untuk menuBox dan menuColumn agar tidak duplikat
+  // (Tidak ada perubahan di sini, hanya dipindahkan untuk kerapian jika Anda mau)
   Widget menuBox(String imagePath, String label) {
     if (label == 'Dosen') {
       return Container(
@@ -213,7 +329,7 @@ class Homepage extends StatelessWidget {
             Positioned(
               left: -3,
               child: Image.asset(
-                'lib/assets/ikon/boy.png',
+                'lib/assets/ikon/boy.png', // Pastikan path ini benar
                 width: 80,
                 height: 80,
                 fit: BoxFit.contain,
@@ -222,7 +338,7 @@ class Homepage extends StatelessWidget {
             Positioned(
               right: -3,
               child: Image.asset(
-                'lib/assets/ikon/girl.png',
+                'lib/assets/ikon/girl.png', // Pastikan path ini benar
                 width: 80,
                 height: 80,
                 fit: BoxFit.contain,
@@ -233,7 +349,6 @@ class Homepage extends StatelessWidget {
       );
     }
 
-    // default menuBox
     return Container(
       width: 124,
       height: 124,
@@ -263,7 +378,7 @@ class Homepage extends StatelessWidget {
   Widget menuColumn(String imagePath, String label) {
     return Column(
       children: [
-        menuBox(imagePath, label), // ← tambahan label di sini
+        menuBox(imagePath, label),
         const SizedBox(height: 8),
         Text(
           label,
