@@ -5,15 +5,10 @@ import 'dart:convert';
 import 'dart:async'; // Untuk TimeoutException
 
 class AuthService {
-  // PASTIKAN URL INI BENAR SESUAI CARA ANDA MENJALANKAN APLIKASI & SERVER:
-  // Emulator Android: 'http://10.0.2.2:8000/api/login'
-  // Device Fisik: 'http://IP_LOKAL_KOMPUTER_ANDA:8000/api/login' (dan server Laravel --host=0.0.0.0)
-  // Web (Chrome): 'http://127.0.0.1:8000/api/login'
-  static const String _apiUrl = 'http://10.0.2.2:8000/api/login'; // Default untuk emulator
+  // --- PENTING: SESUAIKAN IP ADDRESS DAN PORT SERVER ANDA ---
+  static const String _apiUrl = 'http://192.168.96.123:8000/api/login'; // GANTI IP JIKA PERLU
 
   Future<Map<String, dynamic>> login(String email, String password) async {
-    // TimeoutException, http.ClientException (SocketException), FormatException akan di-throw dari sini
-    // dan ditangkap oleh ViewModel
     final response = await http.post(
       Uri.parse(_apiUrl),
       headers: <String, String>{
@@ -24,18 +19,15 @@ class AuthService {
         'email': email,
         'password': password,
       }),
-    ).timeout(const Duration(seconds: 20)); // Timeout request 20 detik
+    ).timeout(const Duration(seconds: 45)); // Timeout disesuaikan (misal 45 detik)
 
     final responseData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      // Berhasil, kembalikan data (token dan message)
-      return responseData;
+      return responseData; // Mengandung token, message, dan data user dasar
     } else if (response.statusCode == 401 || response.statusCode == 403) {
-      // Gagal autentikasi atau otorisasi, lempar error dengan pesan dari API
-      throw Exception(responseData['message'] ?? 'Autentikasi atau otorisasi gagal');
+      throw Exception(responseData['message'] ?? 'Email, password, atau role salah.');
     } else {
-      // Error server lainnya
       throw Exception(responseData['message'] ?? 'Terjadi kesalahan pada server (Status: ${response.statusCode})');
     }
   }

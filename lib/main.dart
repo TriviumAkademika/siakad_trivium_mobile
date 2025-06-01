@@ -1,30 +1,31 @@
+// lib/main.dart
 import 'package:flutter/material.dart';
-import 'package:siakad_trivium/views/auth/login.dart'; // Pastikan path ini benar
+import 'package:provider/provider.dart';
+import 'package:siakad_trivium/viewmodels/login_viewmodel.dart';    // Sesuaikan path
+import 'package:siakad_trivium/viewmodels/profile_viewmodel.dart'; // Sesuaikan path
+import 'package:siakad_trivium/views/auth/auth_check_page.dart'; // Sesuaikan path
 
-// Tidak perlu import supabase_flutter lagi
-// import 'package:supabase_flutter/supabase_flutter.dart';
-
-void main() async { // Ubah menjadi async jika ada inisialisasi yang membutuhkan await di masa depan
-  // Pastikan Flutter binding diinisialisasi jika ada plugin yang membutuhkannya sebelum runApp
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Tidak ada lagi inisialisasi Supabase di sini
-  // await Supabase.initialize(
-  //   url: 'https://qgiaqdvvtzpgzagimdqj.supabase.co',
-  //   anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnaWFxZHZ2dHpwZ3phZ2ltZHFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc3NDcyNzYsImV4cCI6MjA2MzMyMzI3Nn0.WZPwJagwBlXm-SEG34RCMqEz1LK8H8r3QDW6ln5-jLo',
-  // );
-
-  runApp(const MainApp()); // Ganti MainApp() menjadi const MainApp() jika tidak ada state
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Penting untuk SharedPreferences sebelum runApp
+  runApp(const MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LoginPage(), // Langsung ke LoginPage
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LoginViewModel()),
+        ChangeNotifierProvider(create: (_) => ProfileViewModel()),
+        // Tambahkan provider lain jika ada
+      ],
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Siakad Trivium', // Ganti dengan nama aplikasi Anda
+        home: AuthCheckPage(), // Halaman awal aplikasi
+      ),
     );
   }
 }
