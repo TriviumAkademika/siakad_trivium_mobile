@@ -27,7 +27,7 @@ class DosenCard extends StatelessWidget {
         children: [
           // NIP
           Text(
-            nip,
+            'NIP: $nip',
             style: GoogleFonts.plusJakartaSans(
               fontSize: 14,
               fontWeight: FontWeight.w500,
