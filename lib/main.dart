@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:siakad_trivium/viewmodels/login_viewmodel.dart';    // Sesuaikan path
 import 'package:siakad_trivium/viewmodels/profile_viewmodel.dart'; // Sesuaikan path
-import 'package:siakad_trivium/views/auth/auth_check_page.dart'; // Sesuaikan path
+import 'package:siakad_trivium/views/auth/auth_check_page.dart';
+import 'package:siakad_trivium/views/frs/frs.dart'; // Sesuaikan path
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Penting untuk SharedPreferences sebelum runApp
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Siakad Trivium', // Ganti dengan nama aplikasi Anda
-        home: AuthCheckPage(), // Halaman awal aplikasi
+        home: Frs(), // Halaman awal aplikasi
       ),
     );
   }
