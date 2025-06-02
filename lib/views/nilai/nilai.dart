@@ -7,7 +7,6 @@ import 'package:siakad_trivium/views/widgets/custom_scrollbar.dart';
 import 'package:siakad_trivium/views/widgets/filter_bar.dart';
 import 'package:siakad_trivium/views/widgets/nilai_card.dart';
 import 'package:siakad_trivium/views/widgets/search_bar.dart';
-import 'package:siakad_trivium/views/widgets/matkul_card.dart';
 
 class Nilai extends StatefulWidget {
   const Nilai({super.key});
