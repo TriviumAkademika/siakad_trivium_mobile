@@ -8,6 +8,7 @@ import 'package:siakad_trivium/viewmodels/homepage_news_viewmodel.dart';
 import 'package:siakad_trivium/viewmodels/news_detail_viewmodel.dart'; // Sesuaikan path
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:siakad_trivium/views/frs/frs.dart';
+import 'package:siakad_trivium/views/jadwal/jadwal.dart';
 import 'package:siakad_trivium/views/nilai/nilai.dart';
 import 'package:siakad_trivium/views/widgets/jadwal_card.dart';
 import 'package:siakad_trivium/views/widgets/nilai_card.dart'; // Penting untuk initializeDateFormatting
