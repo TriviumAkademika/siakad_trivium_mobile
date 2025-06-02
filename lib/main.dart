@@ -6,9 +6,14 @@ import 'package:siakad_trivium/viewmodels/profile_viewmodel.dart'; // Sesuaikan 
 import 'package:siakad_trivium/views/auth/auth_check_page.dart';
 import 'package:siakad_trivium/viewmodels/homepage_news_viewmodel.dart';
 import 'package:siakad_trivium/viewmodels/news_detail_viewmodel.dart'; // Sesuaikan path
-import 'package:intl/date_symbol_data_local.dart'; // Penting untuk initializeDateFormatting
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:siakad_trivium/views/frs/frs.dart';
+import 'package:siakad_trivium/views/nilai/nilai.dart';
+import 'package:siakad_trivium/views/widgets/jadwal_card.dart';
+import 'package:siakad_trivium/views/widgets/nilai_card.dart'; // Penting untuk initializeDateFormatting
 
-void main() async { // Pastikan main adalah async
+void main() async {
+  // Pastikan main adalah async
   WidgetsFlutterBinding.ensureInitialized(); // Penting untuk SharedPreferences dan operasi async lain sebelum runApp
 
   // Tambahkan baris ini untuk inisialisasi data lokal pemformatan tanggal
@@ -33,7 +38,7 @@ class MyApp extends StatelessWidget {
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Siakad Trivium', // Ganti dengan nama aplikasi Anda
-        home: AuthCheckPage(), // Halaman awal aplikasi
+        home: AuthCheckPage(),
       ),
     );
   }

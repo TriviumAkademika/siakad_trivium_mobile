@@ -3,6 +3,7 @@ import 'package:siakad_trivium/style.dart';
 import 'package:siakad_trivium/views/widgets/custom_navbar.dart';
 import 'package:siakad_trivium/views/widgets/custom_scrollbar.dart';
 import 'package:siakad_trivium/views/widgets/hari_card.dart';
+import 'package:siakad_trivium/views/widgets/jadwal_card.dart';
 import 'package:siakad_trivium/views/widgets/matkul_card.dart';
 
 class Jadwal extends StatefulWidget {
@@ -37,32 +38,32 @@ class _JadwalState extends State<Jadwal> {
                 },
               ),
               const SizedBox(height: 16),
-              MatkulCard(
-                jenisMatkul: 'Matakuliah Wajib',
+              JadwalCard(
+                jenis: 'Matakuliah Wajib',
                 namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
                 dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom ',
-                label: '13:00-15:30',
+                waktu: '13:00-15:30',
               ),
               const SizedBox(height: 16),
-              MatkulCard(
-                jenisMatkul: 'Matakuliah Wajib',
+              JadwalCard(
+                jenis: 'Matakuliah Wajib',
                 namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
                 dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom ',
-                label: '13:00-15:30',
+                waktu: '13:00-15:30',
               ),
               const SizedBox(height: 16),
-              MatkulCard(
-                jenisMatkul: 'Matakuliah Wajib',
+              JadwalCard(
+                jenis: 'Matakuliah Wajib',
                 namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
                 dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom ',
-                label: '13:00-15:30',
+                waktu: '13:00-15:30',
               ),
               const SizedBox(height: 16),
-              MatkulCard(
-                jenisMatkul: 'Matakuliah Wajib',
+              JadwalCard(
+                jenis: 'Matakuliah Wajib',
                 namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
                 dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom ',
-                label: '13:00-15:30',
+                waktu: '13:00-15:30',
               ),
             ],
           ),

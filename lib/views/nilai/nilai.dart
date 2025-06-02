@@ -5,6 +5,7 @@ import 'package:siakad_trivium/style.dart';
 import 'package:siakad_trivium/views/widgets/custom_navbar.dart';
 import 'package:siakad_trivium/views/widgets/custom_scrollbar.dart';
 import 'package:siakad_trivium/views/widgets/filter_bar.dart';
+import 'package:siakad_trivium/views/widgets/nilai_card.dart';
 import 'package:siakad_trivium/views/widgets/search_bar.dart';
 import 'package:siakad_trivium/views/widgets/matkul_card.dart';
 
@@ -187,14 +188,13 @@ class _NilaiState extends State<Nilai> {
         final nilai = _filteredNilai[index];
         return Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
-          child: MatkulCard(
-            // Sesuaikan dengan properti MatkulCard dan data dari NilaiMahasiswaModel
-            jenisMatkul: nilai.jenisMatkul,
+          child: NilaiCard(
+            jenis: nilai.jenisMatkul,
             namaMatkul: nilai.namaMatkul,
             dosen1:
                 nilai.namaDosenUtama ??
                 'N/A', // Jika ada dosen2, tambahkan logikanya
-            label:
+            nilai:
                 nilai
                     .displayGrade, // Menggunakan getter untuk nilai yang ditampilkan
           ),

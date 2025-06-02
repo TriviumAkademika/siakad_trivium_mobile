@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:siakad_trivium/style.dart';
 
-class MatkulCard extends StatelessWidget {
-  final String jenisMatkul;
+class NilaiCard extends StatelessWidget {
+  final String jenis;
   final String namaMatkul;
   final String dosen1;
   final String? dosen2;
-  final String label;
+  final String nilai;
 
-  const MatkulCard({
+  const NilaiCard({
     Key? key,
-    required this.jenisMatkul,
+    required this.jenis,
     required this.namaMatkul,
     required this.dosen1,
     this.dosen2,
-    required this.label,
+    required this.nilai,
   }) : super(key: key);
 
   @override
@@ -30,7 +30,7 @@ class MatkulCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            jenisMatkul,
+            jenis,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -50,9 +50,7 @@ class MatkulCard extends StatelessWidget {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    border: Border(
-                      left: BorderSide(color: brand950, width: 2.0),
-                    ),
+                    border: Border(left: BorderSide(color: brand950, width: 4)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,27 +88,18 @@ class MatkulCard extends StatelessWidget {
                 ),
               ),
 
-              // Expanded label berupa nilai atau jam
+              // Expanded nilai berupa nilai atau jam
               Expanded(
-                flex: label.length <= 2 ? 1 : 1,
+                flex: 1,
                 child: Container(
                   alignment: Alignment.center,
-                  padding:
-                      label.length <= 2
-                          ? const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 8,
-                          )
-                          : const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 8,
-                          ),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                   decoration: BoxDecoration(
                     color: brand100,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    label,
+                    nilai,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 14,
