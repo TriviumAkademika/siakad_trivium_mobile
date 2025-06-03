@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siakad_trivium/style.dart';
+import 'package:siakad_trivium/views/widgets/custom_button.dart';
 import 'package:siakad_trivium/views/widgets/custom_navbar.dart';
 import 'package:siakad_trivium/views/widgets/custom_scrollbar.dart';
 import 'package:siakad_trivium/views/widgets/filter_bar.dart';
@@ -7,7 +8,10 @@ import 'package:siakad_trivium/views/widgets/filter_bar.dart';
 // Jika nama filenya adalah custom_textfield.dart (sesuai konvensi), maka:
 // import 'package:siakad_trivium/views/widgets/custom_textfield.dart';
 // Jika masih textfield.dart, pastikan isinya adalah CustomTextfield yang benar.
-import 'package:siakad_trivium/views/widgets/custom_textfield.dart'; // Atau custom_textfield.dart
+import 'package:siakad_trivium/views/widgets/custom_textfield.dart';
+import 'package:siakad_trivium/views/widgets/frs_drop_card.dart';
+import 'package:siakad_trivium/views/frs/detail_frs.dart';
+import 'package:siakad_trivium/views/frs/tambah_frs.dart';
 
 class Frs extends StatelessWidget {
   const Frs({super.key});
@@ -64,6 +68,62 @@ class Frs extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        label: 'Lihat Semua',
+                        icon: Icons.remove_red_eye_outlined,
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailFrs()));
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: CustomButton(
+                        label: 'Tambah FRS',
+                        icon: Icons.add,
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const TambahFrs()));
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                FrsDropCard(
+                  jenis: 'Matakuliah Wajib',
+                  sks: '2',
+                  namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
+                  dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
+                  onDelete: () {},
+                ),
+                const SizedBox(height: 16),
+                FrsDropCard(
+                  jenis: 'Matakuliah Wajib',
+                  sks: '2',
+                  namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
+                  dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
+                  onDelete: () {},
+                ),
+                const SizedBox(height: 16),
+                FrsDropCard(
+                  jenis: 'Matakuliah Wajib',
+                  sks: '2',
+                  namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
+                  dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
+                  onDelete: () {},
+                ),
+                const SizedBox(height: 16),
+                FrsDropCard(
+                  jenis: 'Matakuliah Wajib',
+                  sks: '2',
+                  namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
+                  dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
+                  onDelete: () {},
                 ),
               ],
             ),

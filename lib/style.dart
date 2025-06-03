@@ -14,4 +14,5 @@ var brand900 = const Color(0xFF1A3A8E);
 var brand950 = const Color(0xFF152556);
 var hitam = const Color(0xFF464646);
 var putih = const Color(0xFFFDFDFD);
+var merah = const Color(0XFFC8290D);
 var hintText = const Color(0xFF525252);

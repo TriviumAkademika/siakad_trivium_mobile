@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:siakad_trivium/style.dart';
 import 'package:siakad_trivium/viewmodels/profile_viewmodel.dart'; // Digunakan untuk validasi token
 import 'package:siakad_trivium/views/auth/login.dart';       // Sesuaikan path
 import 'package:siakad_trivium/views/homepage/homepage.dart';     // Sesuaikan path
@@ -75,9 +76,9 @@ class _AuthCheckPageState extends State<AuthCheckPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color(0xFFFDFDFD), // Atau warna splash screen Anda
-      body: Center(
+    return Scaffold(
+      backgroundColor: bgColor, // Atau warna splash screen Anda
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

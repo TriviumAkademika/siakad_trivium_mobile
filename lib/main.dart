@@ -11,6 +11,7 @@ import 'package:siakad_trivium/viewmodels/jadwal_viewmodel.dart'; // <-- Tambahk
 
 // Halaman Awal
 import 'package:siakad_trivium/views/auth/auth_check_page.dart';
+import 'package:siakad_trivium/views/frs/frs.dart';
 
 // Import halaman/widget lain di sini tidak wajib jika tidak digunakan langsung di MyApp
 // import 'package:siakad_trivium/views/frs/frs.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Siakad Trivium',
-        home: AuthCheckPage(), // Halaman awal aplikasi
+        home: Frs(), // Halaman awal aplikasi
         // Anda bisa menambahkan tema global di sini jika mau
         // theme: ThemeData(
         //   primarySwatch: Colors.blue,
