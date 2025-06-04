@@ -87,25 +87,25 @@ class _FrsState extends State<Frs> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomTextfield(
-                          label: 'Nama',
-                          value: frsHeader?['mahasiswa']?['nama_mahasiswa'] ?? 'N/A',
-                        ),
-                        const SizedBox(height: 16),
-                        CustomTextfield(
-                          label: 'Dosen Wali',
-                          value: frsHeader?['mahasiswa']?['dosen_wali']?['nama_dosen'] ?? 'N/A',
-                        ),
-                        const SizedBox(height: 16),
+                        // CustomTextfield(
+                        //   label: 'Nama',
+                        //   value: frsHeader?['mahasiswa']?['nama_mahasiswa'] ?? 'N/A',
+                        // ),
+                        // const SizedBox(height: 16),
+                        // CustomTextfield(
+                        //   label: 'Dosen Wali',
+                        //   value: frsHeader?['mahasiswa']?['dosen_wali']?['nama_dosen'] ?? 'N/A',
+                        // ),
+                        // const SizedBox(height: 16),
                         Row(
                           children: [
-                            Expanded(
-                              child: CustomTextfield(
-                                label: 'IPK/IPS',
-                                value: '${frsHeader?['ipk'] ?? 'N/A'}/${frsHeader?['ips'] ?? 'N/A'}',
-                              ),
-                            ),
-                            const SizedBox(width: 16),
+                            // Expanded(
+                            //   child: CustomTextfield(
+                            //     label: 'IPK/IPS',
+                            //     value: '${frsHeader?['ipk'] ?? 'N/A'}/${frsHeader?['ips'] ?? 'N/A'}',
+                            //   ),
+                            // ),
+                            // const SizedBox(width: 16),
                             Expanded(
                               child: CustomTextfield(
                                 label: 'Total SKS',
