@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:siakad_trivium/style.dart';
+import 'package:siakad_trivium/style.dart'; // Make sure style.dart is imported
 
 class FrsCard extends StatelessWidget {
-  final int idDetailFrs; // Add this to pass the ID for deletion
+  final int idDetailFrs;
   final String jenis;
   final String sks;
   final String namaMatkul;
   final String dosen1;
   final String? dosen2;
   final VoidCallback? onDelete;
+  final bool isApproved; // New parameter for FRS status
 
   const FrsCard({
     Key? key,
-    required this.idDetailFrs, // Make it required
+    required this.idDetailFrs,
     required this.jenis,
     required this.sks,
     required this.namaMatkul,
     required this.dosen1,
     this.dosen2,
     this.onDelete,
+    this.isApproved = false, // Default to false if not provided
   }) : super(key: key);
 
   @override
@@ -45,7 +47,7 @@ class FrsCard extends StatelessWidget {
               ),
               const Text(' - '),
               Text(
-                '$sks SKS', // Add SKS unit for clarity
+                '$sks SKS',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -122,11 +124,17 @@ class FrsCard extends StatelessWidget {
                     color: brand100,
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: IconButton(
-                    onPressed: onDelete,
-                    icon: Icon(Icons.delete, color: merah), // Make sure 'merah' is defined in style.dart
-                    tooltip: "Drop FRS",
-                  ),
+                  child: isApproved
+                      ? Icon(
+                          Icons.check_circle, // Checklist icon
+                          color: hijau, // Green color for approved
+                          size: 30, // Adjust size as needed
+                        )
+                      : IconButton(
+                          onPressed: onDelete,
+                          icon: Icon(Icons.delete, color: merah), // Delete icon
+                          tooltip: "Drop FRS",
+                        ),
                 ),
               ),
             ],

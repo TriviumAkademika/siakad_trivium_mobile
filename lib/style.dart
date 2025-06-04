@@ -16,3 +16,4 @@ var hitam = const Color(0xFF464646);
 var putih = const Color(0xFFFDFDFD);
 var merah = const Color(0XFFC8290D);
 var hintText = const Color(0xFF525252);
+var hijau = Color(0xFF34A853);

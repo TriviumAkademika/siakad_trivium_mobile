@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Import provider
+import 'package:provider/provider.dart';
 import 'package:siakad_trivium/services/frs_service.dart';
 import 'package:siakad_trivium/style.dart';
 import 'package:siakad_trivium/views/widgets/custom_button.dart';
-import 'package:siakad_trivium/views/widgets/custom_navbar.dart';
+import 'package:siakad_trivium/views/widgets/custom_navbar.dart'; // Pastikan import ini benar jika berbeda
 import 'package:siakad_trivium/views/widgets/custom_scrollbar.dart';
 import 'package:siakad_trivium/views/widgets/custom_textfield.dart';
 import 'package:siakad_trivium/views/widgets/frs_card.dart';
 import 'package:siakad_trivium/views/frs/tambah_frs.dart';
-import 'package:siakad_trivium/viewmodels/frs_viewmodel.dart'; // Import your ViewModel
+import 'package:siakad_trivium/viewmodels/frs_viewmodel.dart';
 
 class Frs extends StatefulWidget {
   const Frs({super.key});
@@ -23,8 +23,6 @@ class _FrsState extends State<Frs> {
   @override
   void initState() {
     super.initState();
-    // Use Future.microtask to delay fetching data until after the build cycle
-    // This is good practice when calling async operations in initState
     Future.microtask(() {
       _frsViewModel = Provider.of<FrsViewModel>(context, listen: false);
       _frsViewModel.fetchFrsData();
@@ -38,17 +36,24 @@ class _FrsState extends State<Frs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: bgColor, // Assuming bgColor is defined in style.dart
       appBar: const CustomNavbar(title: 'FRS'),
       body: Consumer<FrsViewModel>(
         builder: (context, frsViewModel, child) {
-          if (frsViewModel.state == FrsViewState.loading || frsViewModel.state == FrsViewState.initial) {
-            return const Center(child: CircularProgressIndicator());
+          if (frsViewModel.state == FrsViewState.loading || frsViewModel.state == FrsViewState.initial || frsViewModel.state == FrsViewState.submitting) {
+            return Center(child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 8),
+                Text(frsViewModel.message.isNotEmpty ? frsViewModel.message : 'Memuat data...'),
+              ],
+            ));
           } else if (frsViewModel.state == FrsViewState.error) {
             return RefreshIndicator(
               onRefresh: _refreshFrsData,
               child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(), // Allows pull-to-refresh even if content is small
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height - AppBar().preferredSize.height - MediaQuery.of(context).padding.top,
                   child: Center(
@@ -67,11 +72,10 @@ class _FrsState extends State<Frs> {
           } else {
             // Data is loaded, display it
             final frsHeader = frsViewModel.frsHeader;
-            final frsDetails = frsHeader?['detail_frs'] as List<dynamic>? ?? [];
+            // LANGSUNG GUNAKAN frsViewModel.currentFrsCourses
+            final List<DetailFrsItem> currentFrsCourses = frsViewModel.currentFrsCourses;
 
-            // Extract available schedules (jadwal_tersedia) for TambahFrsPage
             final List<JadwalTersedia> availableSchedules = frsViewModel.jadwalTersedia;
-
 
             return RefreshIndicator(
               onRefresh: _refreshFrsData,
@@ -114,14 +118,14 @@ class _FrsState extends State<Frs> {
                         Row(
                           children: [
                             Expanded(
-                              child: CustomTextfield( // Changed from FilterBar to CustomTextfield for static display
+                              child: CustomTextfield(
                                 label: 'Tahun Ajaran',
                                 value: frsHeader?['tahun_ajaran'] ?? 'N/A',
                               ),
                             ),
                             const SizedBox(width: 16),
                             Expanded(
-                              child: CustomTextfield( // Changed from FilterBar to CustomTextfield for static display
+                              child: CustomTextfield(
                                 label: 'Semester',
                                 value: frsHeader?['semester'] ?? 'N/A',
                               ),
@@ -129,51 +133,34 @@ class _FrsState extends State<Frs> {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            // Expanded(
-                            //   child: CustomButton(
-                            //     label: 'Lihat Semua',
-                            //     icon: Icons.remove_red_eye_outlined,
-                            //     onPressed: () {
-                            //       // This button navigates to DetailFrs, which might not be needed
-                            //       // if all details are shown on this page.
-                            //       // If 'DetailFrs' page shows something else, keep it.
-                            //       // For now, it's commented out as per typical FRS flow.
-                            //       // Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailFrs()));
-                            //     },
-                            //   ),
-                            // ),
-                            // const SizedBox(width: 16),
-                            Expanded(
-                              child: CustomButton(
-                                label: 'Tambah FRS',
-                                icon: Icons.add,
-                                onPressed: () async {
-                                  // Pass available schedules to TambahFrsPage
-                                  final bool? added = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => TambahFrsPage(
-                                        availableSchedules: availableSchedules,
-                                      ),
-                                    ),
-                                  );
-                                  if (added == true) {
-                                    // Optionally show a success message after return
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Mata kuliah berhasil ditambahkan!')),
-                                    );
-                                    // Data will be refreshed by fetchFrsData in addJadwalToFrs
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
+                        SizedBox( // Menggunakan SizedBox untuk memberikan tinggi agar Expanded di dalamnya tidak error
+                          width: double.infinity, // Memastikan CustomButton mengambil lebar penuh
+                          child: CustomButton(
+                            label: 'Tambah FRS',
+                            icon: Icons.add,
+                            onPressed: () async {
+                              final bool? added = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TambahFrsPage(
+                                    availableSchedules: availableSchedules,
+                                  ),
+                                ),
+                              );
+                              if (added == true) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Mata kuliah berhasil ditambahkan!')),
+                                );
+                                // fetchFrsData akan dipanggil oleh addJadwalToFrs di TambahFrsPage
+                                // atau Anda bisa memanggilnya secara eksplisit di sini jika TambahFrsPage tidak memicu refresh
+                                // await _frsViewModel.fetchFrsData();
+                              }
+                            },
+                          ),
                         ),
                         const SizedBox(height: 16),
                         // Displaying FRS details from the current FRS
-                        if (frsDetails.isEmpty)
+                        if (currentFrsCourses.isEmpty) // Menggunakan currentFrsCourses
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 24.0),
                             child: Center(
@@ -184,57 +171,53 @@ class _FrsState extends State<Frs> {
                             ),
                           )
                         else
-                          ...frsDetails.map((detail) {
-                            final jadwal = detail['jadwal'];
-                            if (jadwal == null) return const SizedBox.shrink(); // Handle null jadwal
-                            final matkul = jadwal['matkul'];
-                            final dosen1 = jadwal['dosen'];
-                            final dosen2 = jadwal['dosen_2']; // Assuming dosen_2 is directly available in jadwal
-
+                          ...currentFrsCourses.map((course) { // Iterasi langsung pada objek DetailFrsItem
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 16.0),
                               child: FrsCard(
-                                idDetailFrs: detail['id_detail_frs'], // Pass id_detail_frs
-                                jenis: matkul?['jenis'] ?? 'N/A',
-                                sks: (matkul?['sks'] ?? 0).toString(),
-                                namaMatkul: matkul?['nama_matkul'] ?? 'N/A',
-                                dosen1: dosen1?['nama_dosen'] ?? 'N/A',
-                                dosen2: dosen2?['nama_dosen'], // Pass dosen2 if available
-                                onDelete: () async {
-                                  // Show confirmation dialog before dropping
-                                  bool confirm = await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('Konfirmasi Hapus'),
-                                        content: Text('Anda yakin ingin menghapus mata kuliah "${matkul?['nama_matkul'] ?? 'N/A'}" dari FRS?'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () => Navigator.of(context).pop(false),
-                                            child: const Text('Batal'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () => Navigator.of(context).pop(true),
-                                            child: const Text('Hapus'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
+                                idDetailFrs: course.idDetailFrs,
+                                jenis: course.jenis,
+                                sks: course.sks.toString(),
+                                namaMatkul: course.namaMatkul,
+                                dosen1: course.dosen1,
+                                dosen2: course.dosen2,
+                                isApproved: course.status, // <--- INI ADALAH PERBAIKAN UTAMA
+                                onDelete: course.status // Hanya izinkan penghapusan jika belum disetujui
+                                    ? null
+                                    : () async {
+                                        bool? confirm = await showDialog<bool>(
+                                          context: context,
+                                          builder: (BuildContext dialogContext) {
+                                            return AlertDialog(
+                                              title: const Text('Konfirmasi Hapus'),
+                                              content: Text('Anda yakin ingin menghapus "${course.namaMatkul}" dari FRS?'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(dialogContext).pop(false),
+                                                  child: const Text('Batal'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(dialogContext).pop(true),
+                                                  child: const Text('Hapus'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
 
-                                  if (confirm == true) {
-                                    await frsViewModel.dropJadwalFromFrs(detail['id_detail_frs']);
-                                    if (frsViewModel.state == FrsViewState.loaded) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text(frsViewModel.message)),
-                                      );
-                                    } else if (frsViewModel.state == FrsViewState.error) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('Gagal menghapus: ${frsViewModel.message}')),
-                                      );
-                                    }
-                                  }
-                                },
+                                        if (confirm == true) {
+                                          bool success = await frsViewModel.dropJadwalFromFrs(course.idDetailFrs);
+                                          if (success) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(content: Text(frsViewModel.message)),
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(content: Text('Gagal menghapus: ${frsViewModel.message}')),
+                                            );
+                                          }
+                                        }
+                                      },
                               ),
                             );
                           }).toList(),

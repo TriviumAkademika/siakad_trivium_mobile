@@ -1,26 +1,21 @@
-// lib/services/frs_service.dart
-
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async'; // Untuk TimeoutException
 import 'package:shared_preferences/shared_preferences.dart';
-// Anda mungkin perlu model JadwalTersedia di sini jika parsing dilakukan di service
-// atau jika FrsViewModel mengembalikan objek model yang sudah diparsing.
-// Untuk konsistensi, kita bisa definisikan model JadwalTersedia di file model terpisah atau di sini.
-// Saya akan pindahkan definisi JadwalTersedia ke sini untuk sementara agar service ini mandiri.
 
+// Model for available schedules (unchanged, still needed for adding courses)
 class JadwalTersedia {
   final int idJadwal;
   final String? kodeMatkul;
   final String? namaMatkul;
   final int sks;
   final String? namaDosen;
-  final String? namaDosen2; // Ini perlu diambil dari objek dosen_2 jika ada
+  final String? namaDosen2;
   final String? hari;
   final String? jamMulai;
   final String? jamSelesai;
   final String? ruangan;
-  final String? kelasJadwal; // Ini perlu diambil dari objek kelas jika ada
+  final String? kelasJadwal;
   final String? jenisMatkul;
 
   JadwalTersedia({
@@ -39,62 +34,94 @@ class JadwalTersedia {
   });
 
   factory JadwalTersedia.fromJson(Map<String, dynamic> json) {
-    // print(" DEBUG: Parsing JadwalTersedia JSON: $json"); // Boleh tetap ada untuk debug
-
-    // Ambil objek nested terlebih dahulu
     final matkulData = json['matkul'] as Map<String, dynamic>?;
     final dosenData = json['dosen'] as Map<String, dynamic>?;
     final waktuData = json['waktu'] as Map<String, dynamic>?;
     final ruanganData = json['ruangan'] as Map<String, dynamic>?;
-    
-    // Untuk dosen_2 dan kelas_jadwal, kita perlu lihat bagaimana API mengirimkannya.
-    // Dari Laravel controller, Anda mengirim 'nama_dosen_2' dan 'kelas_jadwal' secara langsung di mapping.
-    // Jadi, kita bisa akses langsung dari 'json'.
-    // Jika API mengirim objek 'dosen_kedua' dan 'kelas', maka parsingnya akan beda.
-    // Saya akan asumsikan API Anda mengirim field 'nama_dosen_2' dan 'kelas_jadwal'
-    // langsung di level atas JSON jadwal_tersedia (sesuai mapping di Laravel).
 
     return JadwalTersedia(
       idJadwal: json['id_jadwal'] as int,
-      
-      // Mengambil dari dalam objek 'matkul'
       kodeMatkul: matkulData?['kode_matkul'] as String?,
       namaMatkul: matkulData?['nama_matkul'] as String?,
       sks: matkulData?['sks'] as int? ?? 0,
-      jenisMatkul: matkulData?['jenis'] as String? ?? 'Pilihan', // 'jenis' ada di dalam 'matkul'
-
-      // Mengambil dari dalam objek 'dosen'
+      jenisMatkul: matkulData?['jenis'] as String? ?? 'Pilihan',
       namaDosen: dosenData?['nama_dosen'] as String?,
-      
-      // Mengambil dari objek 'dosen_kedua' jika API mengirimnya sebagai objek
-      // Jika API Anda mengirim 'nama_dosen_2' langsung, maka:
-      namaDosen2: json['nama_dosen_2'] as String?, // Sesuaikan dengan output API Anda
-                                                   // Jika API mengirim objek "dosen_kedua":
-                                                   // (json['dosen_kedua'] as Map<String,dynamic>?)?['nama_dosen'] as String?,
-
-
-      // Mengambil dari dalam objek 'waktu'
+      namaDosen2: json['nama_dosen_2'] as String?,
       hari: waktuData?['hari'] as String?,
-      jamMulai: waktuData?['jam_mulai'] as String?, // Ini sudah string "HH:MM:SS"
-      jamSelesai: waktuData?['jam_selesai'] as String?, // Ini sudah string "HH:MM:SS"
-
-      // Mengambil dari dalam objek 'ruangan'
-      // Anda bisa pilih mau 'nama_ruangan' atau 'kode_ruangan'
+      jamMulai: waktuData?['jam_mulai'] as String?,
+      jamSelesai: waktuData?['jam_selesai'] as String?,
       ruangan: ruanganData?['nama_ruangan'] as String? ?? ruanganData?['kode_ruangan'] as String?,
-      
-      // Mengambil dari objek 'kelas' jika API mengirimnya sebagai objek
-      // Jika API Anda mengirim 'kelas_jadwal' langsung, maka:
-      kelasJadwal: json['kelas_jadwal'] as String?, // Sesuaikan dengan output API Anda
-                                                    // Jika API mengirim objek "kelas":
-                                                    // (json['kelas'] as Map<String,dynamic>?)?['nama_kelas_full'] as String?
-                                                    // atau (json['kelas'] as Map<String,dynamic>?)?['nama_kelas'] as String?
+      kelasJadwal: json['kelas_jadwal'] as String?,
     );
   }
 }
+
+// Model NEW: Represents a course selected in the FRS, including its status
+class DetailFrsItem {
+  final int idDetailFrs;
+  final int idFrs;
+  final int idJadwal;
+  final bool status; // The approval status of this FRS detail entry
+  final String jenis;
+  final int sks;
+  final String namaMatkul;
+  final String dosen1;
+  final String? dosen2;
+  final String? hari;
+  final String? jamMulai;
+  final String? jamSelesai;
+  final String? ruangan;
+  final String? kelasJadwal;
+
+  DetailFrsItem({
+    required this.idDetailFrs,
+    required this.idFrs,
+    required this.idJadwal,
+    required this.status,
+    required this.jenis,
+    required this.sks,
+    required this.namaMatkul,
+    required this.dosen1,
+    this.dosen2,
+    this.hari,
+    this.jamMulai,
+    this.jamSelesai,
+    this.ruangan,
+    this.kelasJadwal,
+  });
+
+  factory DetailFrsItem.fromJson(Map<String, dynamic> json) {
+    final jadwalData = json['jadwal'] as Map<String, dynamic>?;
+    final matkulData = jadwalData?['matkul'] as Map<String, dynamic>?;
+    final dosenData = jadwalData?['dosen'] as Map<String, dynamic>?;
+    final waktuData = jadwalData?['waktu'] as Map<String, dynamic>?;
+    final ruanganData = jadwalData?['ruangan'] as Map<String, dynamic>?;
+
+    // Perubahan di sini: Mengonversi integer (0/1) menjadi boolean
+    final int? statusInt = json['status'] as int?;
+    final bool parsedStatus = statusInt == 1; // Jika 1 maka true, selain itu false
+
+    return DetailFrsItem(
+      idDetailFrs: json['id_detail_frs'] as int,
+      idFrs: json['id_frs'] as int,
+      idJadwal: json['id_jadwal'] as int,
+      status: parsedStatus, // Menggunakan nilai boolean yang sudah di-parse
+      jenis: matkulData?['jenis'] as String? ?? 'Pilihan',
+      sks: matkulData?['sks'] as int? ?? 0,
+      namaMatkul: matkulData?['nama_matkul'] as String? ?? 'Nama Mata Kuliah Tidak Diketahui',
+      dosen1: dosenData?['nama_dosen'] as String? ?? 'Dosen Tidak Diketahui',
+      dosen2: jadwalData?['nama_dosen_2'] as String?,
+      hari: waktuData?['hari'] as String?,
+      jamMulai: waktuData?['jam_mulai'] as String?,
+      jamSelesai: waktuData?['jam_selesai'] as String?,
+      ruangan: ruanganData?['nama_ruangan'] as String?,
+      kelasJadwal: jadwalData?['kelas_jadwal'] as String?,
+    );
+  }
+}
+
 class FrsService {
-  // --- PENTING: SESUAIKAN IP ADDRESS DAN PORT SERVER ANDA ---
-  static const String _baseUrl =
-      'http://10.0.2.2:8000/api'; // <--- GANTI IP JIKA PERLU
+  static const String _baseUrl = 'http://10.0.2.2:8000/api'; // <--- GANTI IP JIKA PERLU
 
   Future<Map<String, dynamic>> getCurrentFrsData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -185,7 +212,6 @@ class FrsService {
 
     final response = await http
         .delete(
-          // Menggunakan DELETE
           Uri.parse('$_baseUrl/mahasiswa/frs/courses/$idDetailFrs'),
           headers: <String, String>{
             'Accept': 'application/json',

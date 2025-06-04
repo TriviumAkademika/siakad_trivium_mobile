@@ -3,9 +3,8 @@ import 'package:siakad_trivium/services/frs_service.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
-// Ensure JadwalTersedia is accessible, either by importing or defining here.
-// Since it's in frs_service.dart, we'll import it from there.
-import 'package:siakad_trivium/services/frs_service.dart' show JadwalTersedia;
+// Ensure JadwalTersedia and DetailFrsItem are accessible
+import 'package:siakad_trivium/services/frs_service.dart' show JadwalTersedia, DetailFrsItem;
 
 enum FrsViewState { initial, loading, loaded, error, submitting }
 
@@ -16,9 +15,12 @@ class FrsViewModel extends ChangeNotifier {
   FrsViewState get state => _state;
 
   List<JadwalTersedia> _jadwalTersedia = [];
-  List<JadwalTersedia> get jadwalTersedia => _jadwalTersedia; // This holds available schedules for TambahFrsPage
+  List<JadwalTersedia> get jadwalTersedia => _jadwalTersedia; // Available schedules
 
-  Map<String, dynamic>? _frsHeader; // This will hold the main FRS data including detailFrs
+  List<DetailFrsItem> _currentFrsCourses = []; // New list for selected FRS courses
+  List<DetailFrsItem> get currentFrsCourses => _currentFrsCourses;
+
+  Map<String, dynamic>? _frsHeader; // This will hold the main FRS data excluding detailFrs now
   Map<String, dynamic>? get frsHeader => _frsHeader;
 
   String _message = '';
@@ -35,10 +37,15 @@ class FrsViewModel extends ChangeNotifier {
     try {
       final frsDataResponse = await _frsService.getCurrentFrsData();
 
-      // The 'frs' key from Laravel API's 'data' object contains FRS header and detailFrs
       _frsHeader = frsDataResponse['frs'] as Map<String, dynamic>?;
+
+      // Parse current FRS courses (detailFrs)
+      final List<dynamic> detailFrsList = _frsHeader?['detail_frs'] as List<dynamic>? ?? [];
+      _currentFrsCourses = detailFrsList
+          .map((json) => DetailFrsItem.fromJson(json as Map<String, dynamic>))
+          .toList();
       
-      // The 'jadwal_tersedia' key contains a list of available schedules
+      // Parse available schedules (jadwal_tersedia)
       final List<dynamic> jadwalList = frsDataResponse['jadwal_tersedia'] as List<dynamic>? ?? [];
       _jadwalTersedia = jadwalList
           .map((json) => JadwalTersedia.fromJson(json as Map<String, dynamic>))
@@ -64,14 +71,13 @@ class FrsViewModel extends ChangeNotifier {
       final response = await _frsService.addSchedulesToFrs([jadwalId]);
       _message = response['message'] as String? ?? 'Operasi berhasil.';
       
-      // Refresh data after successful addition
-      await fetchFrsData();
+      await fetchFrsData(); // Refresh data after successful addition
       if(_state == FrsViewState.loaded){
         _message = response['message'] as String? ?? 'Mata kuliah ditambahkan dan data diperbarui.';
         notifyListeners();
         return true;
       }
-      return false; // If fetchFrsData fails, return false
+      return false;
     } on TimeoutException catch (e) {
       _setState(originalState, msg: 'Koneksi ke server time out saat menambah.');
       debugPrint('FrsViewModel: Add Jadwal Error (TimeoutException): $e');
@@ -94,14 +100,13 @@ class FrsViewModel extends ChangeNotifier {
       final response = await _frsService.dropScheduleFromFrs(idDetailFrs);
       _message = response['message'] as String? ?? 'Mata kuliah berhasil dihapus.';
 
-      // Refresh data after successful deletion
-      await fetchFrsData();
+      await fetchFrsData(); // Refresh data after successful deletion
       if(_state == FrsViewState.loaded){
         _message = response['message'] as String? ?? 'Mata kuliah dihapus dan data diperbarui.';
         notifyListeners();
         return true;
       }
-      return false; // If fetchFrsData fails, return false
+      return false;
     } on TimeoutException catch (e) {
       _setState(originalState, msg: 'Koneksi ke server time out saat menghapus.');
       debugPrint('FrsViewModel: Drop Jadwal Error (TimeoutException): $e');
