@@ -10,7 +10,7 @@ import 'package:siakad_trivium/views/widgets/filter_bar.dart';
 // Jika masih textfield.dart, pastikan isinya adalah CustomTextfield yang benar.
 import 'package:siakad_trivium/views/widgets/custom_textfield.dart';
 import 'package:siakad_trivium/views/widgets/frs_add_card.dart';
-import 'package:siakad_trivium/views/widgets/frs_drop_card.dart';
+import 'package:siakad_trivium/views/widgets/frs_card.dart';
 
 class DetailFrs extends StatelessWidget {
   const DetailFrs({super.key});
@@ -27,45 +27,45 @@ class DetailFrs extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FrsDropCard(
-                  jenis: 'Matakuliah Wajib',
-                  sks: '2',
-                  namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
-                  dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
-                  onDelete: () {},
-                ),
-                const SizedBox(height: 16),
-                FrsDropCard(
-                  jenis: 'Matakuliah Wajib',
-                  sks: '2',
-                  namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
-                  dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
-                  onDelete: () {},
-                ),
-                const SizedBox(height: 16),
-                FrsDropCard(
-                  jenis: 'Matakuliah Wajib',
-                  sks: '2',
-                  namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
-                  dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
-                  onDelete: () {},
-                ),
-                const SizedBox(height: 16),
-                FrsDropCard(
-                  jenis: 'Matakuliah Wajib',
-                  sks: '2',
-                  namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
-                  dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
-                  onDelete: () {},
-                ),
-                const SizedBox(height: 16),
-                FrsDropCard(
-                  jenis: 'Matakuliah Wajib',
-                  sks: '2',
-                  namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
-                  dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
-                  onDelete: () {},
-                ),
+              //   FrsDropCard(
+              //     jenis: 'Matakuliah Wajib',
+              //     sks: '2',
+              //     namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
+              //     dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
+              //     onDelete: () {},
+              //   ),
+              //   const SizedBox(height: 16),
+              //   FrsDropCard(
+              //     jenis: 'Matakuliah Wajib',
+              //     sks: '2',
+              //     namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
+              //     dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
+              //     onDelete: () {},
+              //   ),
+              //   const SizedBox(height: 16),
+              //   FrsDropCard(
+              //     jenis: 'Matakuliah Wajib',
+              //     sks: '2',
+              //     namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
+              //     dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
+              //     onDelete: () {},
+              //   ),
+              //   const SizedBox(height: 16),
+              //   FrsDropCard(
+              //     jenis: 'Matakuliah Wajib',
+              //     sks: '2',
+              //     namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
+              //     dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
+              //     onDelete: () {},
+              //   ),
+              //   const SizedBox(height: 16),
+              //   FrsDropCard(
+              //     jenis: 'Matakuliah Wajib',
+              //     sks: '2',
+              //     namaMatkul: 'Workshop Pemrograman Perangkat Bergerak',
+              //     dosen1: 'Fadilah Fahrul Hardiansyah,S.ST., M. Kom',
+              //     onDelete: () {},
+              //   ),
               ],
             ),
           ),
