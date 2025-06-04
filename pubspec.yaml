@@ -9,6 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  google_fonts: ^6.1.0
+  intl: ^0.19.0 
+  # supabase_flutter: ^1.10.17
+  http: ^1.2.1 # Atau versi terbaru
+  shared_preferences: ^2.2.3 # Atau versi terbaru
+  provider: ^6.1.2 # Atau versi terbaru
 
 dev_dependencies:
   flutter_test:
@@ -23,8 +29,14 @@ flutter_icons:
 
 flutter:
   uses-material-design: true
-
   assets:
-    - lib/assets/
+    - lib/assets/logo/Logo.png
+    - lib/assets/images/avatar.jpg
+    - lib/assets/images/news.png
+    - lib/assets/ikon/boy.png
+    - lib/assets/ikon/girl.png
+    - lib/assets/ikon/chart.png
+    - lib/assets/ikon/folder.png
+    - lib/assets/ikon/calendar.png
 
 

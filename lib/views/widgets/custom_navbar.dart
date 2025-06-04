@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:siakad_trivium/style.dart';
+import 'package:siakad_trivium/views/profile/profile.dart';
 
 class CustomNavbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -11,39 +14,44 @@ class CustomNavbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: bgColor,
+      elevation: 0,
+      // Icon back
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
+        icon: const Icon(Icons.chevron_left, color: Colors.black),
         onPressed: () {
           Navigator.pop(context);
         },
       ),
+      // Title Appbar
+      centerTitle: true,
       title: Text(
         title,
-        style: const TextStyle(
-          fontWeight: FontWeight.w500,
+        style: GoogleFonts.plusJakartaSans(
+          fontWeight: FontWeight.w600,
           fontSize: 20,
+          color: hitam
         ),
       ),
-      centerTitle: false,
+      // Avatar
       actions: [
-        Row(
-          children: [
-            const CircleAvatar(
-              backgroundColor: Colors.black,
-              child: Icon(Icons.person, color: Colors.pink),
+        Padding(
+          padding: const EdgeInsets.only(right: 24),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
+              );
+            },
+            child: CircleAvatar(
+              backgroundColor: bgColor,
+              radius: 18,
+              backgroundImage: AssetImage('lib/assets/images/avatar.jpg'),
             ),
-            IconButton(
-              icon: const Icon(Icons.arrow_drop_down),
-              onPressed: () {
-                // Tambahkan aksi dropdown di sini kalau perlu
-              },
-            ),
-          ],
+          ),
         ),
       ],
-      backgroundColor: Colors.white,
-      elevation: 1,
-      foregroundColor: Colors.black,
     );
   }
 }
