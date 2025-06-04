@@ -8,17 +8,11 @@ import 'package:siakad_trivium/viewmodels/profile_viewmodel.dart';
 import 'package:siakad_trivium/viewmodels/homepage_news_viewmodel.dart';
 import 'package:siakad_trivium/viewmodels/news_detail_viewmodel.dart';
 import 'package:siakad_trivium/viewmodels/jadwal_viewmodel.dart'; // <-- Tambahkan import ini
+import 'package:siakad_trivium/viewmodels/frs_viewmodel.dart';
 
 // Halaman Awal
 import 'package:siakad_trivium/views/auth/auth_check_page.dart';
 import 'package:siakad_trivium/views/frs/frs.dart';
-
-// Import halaman/widget lain di sini tidak wajib jika tidak digunakan langsung di MyApp
-// import 'package:siakad_trivium/views/frs/frs.dart';
-// import 'package:siakad_trivium/views/jadwal/jadwal.dart';
-// import 'package:siakad_trivium/views/nilai/nilai.dart';
-// import 'package:siakad_trivium/views/widgets/jadwal_card.dart';
-// import 'package:siakad_trivium/views/widgets/nilai_card.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,12 +32,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NewsDetailViewModel()),
         ChangeNotifierProvider(create: (_) => HomepageNewsViewModel()),
         ChangeNotifierProvider(create: (_) => JadwalViewModel()), // <-- Tambahkan provider ini
+        ChangeNotifierProvider(create: (_) => FrsViewModel()),
         // Tambahkan provider lain jika ada di masa depan
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Siakad Trivium',
-        home: Frs(), // Halaman awal aplikasi
+        home: AuthCheckPage(), // Halaman awal aplikasi
         // Anda bisa menambahkan tema global di sini jika mau
         // theme: ThemeData(
         //   primarySwatch: Colors.blue,

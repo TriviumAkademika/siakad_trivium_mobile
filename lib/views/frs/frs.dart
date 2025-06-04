@@ -87,7 +87,7 @@ class Frs extends StatelessWidget {
                         label: 'Tambah FRS',
                         icon: Icons.add,
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const TambahFrs()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const TambahFrsPage()));
                         },
                       ),
                     ),
