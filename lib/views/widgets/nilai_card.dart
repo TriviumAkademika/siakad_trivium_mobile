@@ -7,7 +7,8 @@ class NilaiCard extends StatelessWidget {
   final String namaMatkul;
   final String dosen1;
   final String? dosen2;
-  final String nilai;
+  final String nilaiUts;
+  final String nilaiUas;
 
   const NilaiCard({
     Key? key,
@@ -15,7 +16,8 @@ class NilaiCard extends StatelessWidget {
     required this.namaMatkul,
     required this.dosen1,
     this.dosen2,
-    required this.nilai,
+    required this.nilaiUts,
+    required this.nilaiUas,
   }) : super(key: key);
 
   @override
@@ -30,7 +32,7 @@ class NilaiCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            jenis,
+            'Mata Kuliah $jenis',
             style: GoogleFonts.plusJakartaSans(
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -93,20 +95,37 @@ class NilaiCard extends StatelessWidget {
                 flex: 1,
                 child: Container(
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: brand100,
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: Text(
-                    nilai,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: hitam,
-                    ),
-                    maxLines: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'UTS: $nilaiUts',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: hitam,
+                        ),
+                        maxLines: 2,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'UAS: $nilaiUas',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: hitam,
+                        ),
+                        maxLines: 2,
+                      ),
+                    ],
                   ),
                 ),
               ),

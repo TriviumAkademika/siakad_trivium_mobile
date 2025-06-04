@@ -13,6 +13,7 @@ import 'package:siakad_trivium/viewmodels/frs_viewmodel.dart';
 // Halaman Awal
 import 'package:siakad_trivium/views/auth/auth_check_page.dart';
 import 'package:siakad_trivium/views/frs/frs.dart';
+import 'package:siakad_trivium/views/nilai/nilai.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
