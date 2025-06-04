@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-// Fungsi untuk parsing JSON dari API
 NilaiMahasiswaResponse nilaiMahasiswaResponseFromJson(String str) {
   try {
     return NilaiMahasiswaResponse.fromJson(json.decode(str));
@@ -23,7 +22,7 @@ class NilaiMahasiswaResponse {
   factory NilaiMahasiswaResponse.fromJson(Map<String, dynamic> json) {
     try {
       return NilaiMahasiswaResponse(
-        success: json["success"],
+        success: json["success"] ?? false, // Ditambahkan ?? false untuk keamanan
         data: Data.fromJson(json["data"]),
       );
     } catch (e, stack) {
@@ -42,13 +41,11 @@ class NilaiMahasiswaResponse {
 class Data {
   MahasiswaInfo mahasiswa;
   List<NilaiItem> nilaiList;
-  String? search;
   int count;
 
   Data({
     required this.mahasiswa,
     required this.nilaiList,
-    this.search,
     required this.count,
   });
 
@@ -59,7 +56,6 @@ class Data {
         nilaiList: List<NilaiItem>.from(
           json["nilai_list"].map((x) => NilaiItem.fromJson(x)),
         ),
-        search: json["search"] as String?,
         count: json["count"],
       );
     } catch (e, stack) {
@@ -72,7 +68,6 @@ class Data {
   Map<String, dynamic> toJson() => {
         "mahasiswa": mahasiswa.toJson(),
         "nilai_list": List<dynamic>.from(nilaiList.map((x) => x.toJson())),
-        "search": search,
         "count": count,
       };
 }
@@ -94,9 +89,9 @@ class MahasiswaInfo {
     try {
       return MahasiswaInfo(
         idMahasiswa: json["id_mahasiswa"],
-        nama: json["nama"],
-        nrp: json["nrp"],
-        semester: json["semester"],
+        nama: json["nama"] ?? "N/A", // Ditambahkan ?? "N/A" untuk keamanan
+        nrp: json["nrp"] ?? "N/A",   // Ditambahkan ?? "N/A"
+        semester: json["semester"] ?? "N/A", // Ditambahkan ?? "N/A"
       );
     } catch (e, stack) {
       print("Error in MahasiswaInfo.fromJson: $e");
@@ -140,7 +135,7 @@ class Jadwal {
         idMatkul: json["id_matkul"],
         dosen: json["dosen"] == null ? null : Dosen.fromJson(json["dosen"]),
         dosen2:
-            json["dosen_2"] == null ? null : Dosen.fromJson(json["dosen_2"]),
+            json["dosen2"] == null ? null : Dosen.fromJson(json["dosen2"]),
         idWaktu: json["id_waktu"],
         idRuangan: json["id_ruangan"],
       );
@@ -181,8 +176,8 @@ class Matkul {
     try {
       return Matkul(
         idMatkul: json["id_matkul"],
-        namaMatkul: json["nama_matkul"],
-        jenis: json["jenis"],
+        namaMatkul: json["nama_matkul"] ?? "N/A", // Ditambahkan ?? "N/A"
+        jenis: json["jenis"] ?? "N/A",           // Ditambahkan ?? "N/A"
         sks: json["sks"],
         jadwal:
             json["jadwal"] == null ? null : Jadwal.fromJson(json["jadwal"]),
@@ -208,18 +203,18 @@ class NilaiItem {
   int sks;
   String? nilaiUts;
   String? nilaiUas;
-  bool isWajib;
+  String jenis;
   String tahunAjaran;
-  String semesterDiambil;
+  String semester;
 
   NilaiItem({
     required this.matkul,
     required this.sks,
     this.nilaiUts,
     this.nilaiUas,
-    required this.isWajib,
+    required this.jenis,
     required this.tahunAjaran,
-    required this.semesterDiambil,
+    required this.semester,
   });
 
   factory NilaiItem.fromJson(Map<String, dynamic> json) {
@@ -229,9 +224,9 @@ class NilaiItem {
         sks: json["sks"],
         nilaiUts: json["nilai_uts"] as String?,
         nilaiUas: json["nilai_uas"] as String?,
-        isWajib: json["is_wajib"],
-        tahunAjaran: json["tahun_ajaran"],
-        semesterDiambil: json["semester_diambil"],
+        jenis: json["jenis"] ?? "N/A",
+        tahunAjaran: json["tahun_ajaran"] ?? "N/A",
+        semester: json["semester"] ?? "N/A",
       );
     } catch (e, stack) {
       print("Error in NilaiItem.fromJson: $e");
@@ -245,9 +240,9 @@ class NilaiItem {
         "sks": sks,
         "nilai_uts": nilaiUts,
         "nilai_uas": nilaiUas,
-        "is_wajib": isWajib,
+        "jenis": jenis,
         "tahun_ajaran": tahunAjaran,
-        "semester_diambil": semesterDiambil,
+        "semester": semester,
       };
 }
 
@@ -261,7 +256,7 @@ class Dosen {
     try {
       return Dosen(
         idDosen: json["id_dosen"],
-        namaDosen: json["nama_dosen"],
+        namaDosen: json["nama_dosen"] ?? "N/A", // Ditambahkan ?? "N/A"
       );
     } catch (e, stack) {
       print("Error in Dosen.fromJson: $e");

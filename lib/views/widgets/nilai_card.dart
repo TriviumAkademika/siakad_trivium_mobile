@@ -30,7 +30,7 @@ class NilaiCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            jenis,
+            'Mata Kuliah $jenis',
             style: GoogleFonts.plusJakartaSans(
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -93,7 +93,7 @@ class NilaiCard extends StatelessWidget {
                 flex: 1,
                 child: Container(
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
                   decoration: BoxDecoration(
                     color: brand100,
                     borderRadius: BorderRadius.circular(4),

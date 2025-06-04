@@ -1,6 +1,7 @@
+// nilai_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:siakad_trivium/models/nilai_mahasiswa_model.dart'; // Sesuaikan path
+import 'package:siakad_trivium/models/nilai_mahasiswa_model.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Untuk ambil token
 
 class NilaiService {
@@ -9,32 +10,18 @@ class NilaiService {
 
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('user_token'); //
-  } // Ambil token buat otentikasi ke API setiap kali mau ambil data yang butuh akses user yang sudah login.
+    return prefs.getString('user_token');
+  }
 
-  Future<NilaiMahasiswaResponse> getNilaiMahasiswa({
-    String? tahunAjaran, // Untuk filter
-    String? jenisNilai, // Untuk filter (UTS/UAS)
-    String? searchTerm, // Untuk search
-  }) async {
+  Future<NilaiMahasiswaResponse> getNilaiMahasiswa() async {
     final token = await _getToken();
     if (token == null) {
       throw Exception('Token tidak ditemukan. Silakan login kembali.');
     }
 
-    // Membuat query parameters
-    Map<String, String> queryParams = {};
-    if (searchTerm != null && searchTerm.isNotEmpty) {
-      queryParams['search'] = searchTerm;
-    }
-    // TODO: Implementasi filter tahunAjaran dan jenisNilai di API jika diperlukan
-    // Saat ini API belum mendukung filter ini secara langsung, jadi parameter ini belum digunakan di URL
-    // Jika sudah didukung, tambahkan ke queryParams
-
-    // Membuat Uri dengan query parameters
     var uri = Uri.parse(
       '$_apiUrl/mahasiswa/nilai',
-    ).replace(queryParameters: queryParams.isNotEmpty ? queryParams : null);
+    );
 
     print('Requesting: ${uri.toString()}'); // Untuk debugging
 
@@ -53,10 +40,8 @@ class NilaiService {
     if (response.statusCode == 200) {
       return nilaiMahasiswaResponseFromJson(response.body);
     } else if (response.statusCode == 401) {
-      // Token mungkin tidak valid atau expired
       throw Exception('Sesi Anda telah berakhir. Silakan login kembali.');
     } else {
-      // Coba parse error message dari API jika ada
       try {
         final errorData = json.decode(response.body);
         final errorMessage = errorData['message'] ?? 'Gagal memuat data nilai';
