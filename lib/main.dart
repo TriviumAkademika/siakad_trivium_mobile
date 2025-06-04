@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Siakad Trivium',
-        home: Nilai(), // Halaman awal aplikasi
+        home: AuthCheckPage(), // Halaman awal aplikasi
         // Anda bisa menambahkan tema global di sini jika mau
         // theme: ThemeData(
         //   primarySwatch: Colors.blue,

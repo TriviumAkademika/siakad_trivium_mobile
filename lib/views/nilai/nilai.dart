@@ -79,23 +79,14 @@ class _NilaiState extends State<Nilai> {
                       itemCount: displayList.length,
                       itemBuilder: (context, index) {
                         final item = displayList[index];
-                        String nilaiToShow = '-';
-
-                        if (item.nilaiUts != null && item.nilaiUas != null) {
-                          nilaiToShow =
-                              "UTS: ${item.nilaiUts} / UAS: ${item.nilaiUas}";
-                        } else if (item.nilaiUas != null) {
-                          nilaiToShow = "UAS: ${item.nilaiUas!}";
-                        } else if (item.nilaiUts != null) {
-                          nilaiToShow = "UTS: ${item.nilaiUts!}";
-                        }
 
                         return NilaiCard(
                           jenis: item.jenis,
                           namaMatkul: item.matkul.namaMatkul,
                           dosen1: item.matkul.jadwal?.dosen?.namaDosen ?? 'N/A',
                           dosen2: item.matkul.jadwal?.dosen2?.namaDosen,
-                          nilai: nilaiToShow,
+                          nilaiUts: item.nilaiUts ?? '-',
+                          nilaiUas: item.nilaiUas ?? '-',
                         );
                       },
                       separatorBuilder: (context, index) =>
