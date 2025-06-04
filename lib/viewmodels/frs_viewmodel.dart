@@ -1,29 +1,24 @@
-// lib/viewmodels/frs_viewmodel.dart
-
 import 'package:flutter/foundation.dart';
-import 'package:siakad_trivium/services/frs_service.dart'; // <--- UBAH KE FrsService
+import 'package:siakad_trivium/services/frs_service.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
-// Impor model JadwalTersedia jika didefinisikan di frs_service.dart atau file model terpisah
-// Jika JadwalTersedia ada di frs_service.dart:
-// import 'package:siakad_trivium/services/frs_service.dart' show JadwalTersedia;
-// Jika Anda membuat file model terpisah misal lib/models/jadwal_model.dart:
-// import 'package:siakad_trivium/models/jadwal_model.dart';
-
+// Ensure JadwalTersedia is accessible, either by importing or defining here.
+// Since it's in frs_service.dart, we'll import it from there.
+import 'package:siakad_trivium/services/frs_service.dart' show JadwalTersedia;
 
 enum FrsViewState { initial, loading, loaded, error, submitting }
 
 class FrsViewModel extends ChangeNotifier {
-  final FrsService _frsService = FrsService(); // <--- UBAH KE FrsService
+  final FrsService _frsService = FrsService();
 
   FrsViewState _state = FrsViewState.initial;
   FrsViewState get state => _state;
 
   List<JadwalTersedia> _jadwalTersedia = [];
-  List<JadwalTersedia> get jadwalTersedia => _jadwalTersedia;
+  List<JadwalTersedia> get jadwalTersedia => _jadwalTersedia; // This holds available schedules for TambahFrsPage
 
-  Map<String, dynamic>? _frsHeader;
+  Map<String, dynamic>? _frsHeader; // This will hold the main FRS data including detailFrs
   Map<String, dynamic>? get frsHeader => _frsHeader;
 
   String _message = '';
@@ -36,27 +31,29 @@ class FrsViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchFrsData() async {
-    _setState(FrsViewState.loading, msg: 'Memuat jadwal tersedia...');
+    _setState(FrsViewState.loading, msg: 'Memuat data FRS...');
     try {
-      final frsDataResponse = await _frsService.getCurrentFrsData(); // <--- Gunakan _frsService
-      _frsHeader = frsDataResponse['frs_header'] as Map<String, dynamic>?; // Ambil frs_header
+      final frsDataResponse = await _frsService.getCurrentFrsData();
+
+      // The 'frs' key from Laravel API's 'data' object contains FRS header and detailFrs
+      _frsHeader = frsDataResponse['frs'] as Map<String, dynamic>?;
       
+      // The 'jadwal_tersedia' key contains a list of available schedules
       final List<dynamic> jadwalList = frsDataResponse['jadwal_tersedia'] as List<dynamic>? ?? [];
       _jadwalTersedia = jadwalList
           .map((json) => JadwalTersedia.fromJson(json as Map<String, dynamic>))
           .toList();
       
-      // Pesan sukses bisa diambil dari API jika ada, atau set default
       _setState(FrsViewState.loaded, msg: 'Data FRS berhasil dimuat.');
     } on TimeoutException catch (e) {
-      _setState(FrsViewState.error, msg: 'Koneksi ke server time out.');
-      print('FrsViewModel: Fetch FRS Data Error (TimeoutException): $e');
+      _setState(FrsViewState.error, msg: 'Koneksi ke server time out. Coba lagi.');
+      debugPrint('FrsViewModel: Fetch FRS Data Error (TimeoutException): $e');
     } on http.ClientException catch (e) {
-      _setState(FrsViewState.error, msg: 'Gagal terhubung ke server.');
-      print('FrsViewModel: Fetch FRS Data Error (ClientException): ${e.message}');
+      _setState(FrsViewState.error, msg: 'Gagal terhubung ke server. Periksa koneksi internet Anda.');
+      debugPrint('FrsViewModel: Fetch FRS Data Error (ClientException): ${e.message}');
     } catch (e) {
       _setState(FrsViewState.error, msg: e.toString().replaceFirst('Exception: ', ''));
-      print('FrsViewModel: Fetch FRS Data Error (Umum): $e');
+      debugPrint('FrsViewModel: Fetch FRS Data Error (Umum): $e');
     }
   }
 
@@ -64,57 +61,58 @@ class FrsViewModel extends ChangeNotifier {
     final originalState = _state;
     _setState(FrsViewState.submitting, msg: 'Menambahkan mata kuliah...');
     try {
-      final response = await _frsService.addSchedulesToFrs([jadwalId]); // <--- Gunakan _frsService
+      final response = await _frsService.addSchedulesToFrs([jadwalId]);
       _message = response['message'] as String? ?? 'Operasi berhasil.';
       
-      await fetchFrsData(); // Refresh data
+      // Refresh data after successful addition
+      await fetchFrsData();
       if(_state == FrsViewState.loaded){
-         _message = response['message'] as String? ?? 'Mata kuliah ditambahkan dan data diperbarui.';
-         notifyListeners();
-         return true;
+        _message = response['message'] as String? ?? 'Mata kuliah ditambahkan dan data diperbarui.';
+        notifyListeners();
+        return true;
       }
-      // Jika fetchFrsData gagal setelah add, state akan error dari fetchFrsData
-      return false;
-
+      return false; // If fetchFrsData fails, return false
     } on TimeoutException catch (e) {
       _setState(originalState, msg: 'Koneksi ke server time out saat menambah.');
-      print('FrsViewModel: Add Jadwal Error (TimeoutException): $e');
+      debugPrint('FrsViewModel: Add Jadwal Error (TimeoutException): $e');
       return false;
     } on http.ClientException catch (e) {
-       _setState(originalState, msg: 'Gagal terhubung ke server saat menambah.');
-       print('FrsViewModel: Add Jadwal Error (ClientException): ${e.message}');
-       return false;
+      _setState(originalState, msg: 'Gagal terhubung ke server saat menambah.');
+      debugPrint('FrsViewModel: Add Jadwal Error (ClientException): ${e.message}');
+      return false;
     } catch (e) {
       _setState(originalState, msg: e.toString().replaceFirst('Exception: ', ''));
-      print('FrsViewModel: Add Jadwal Error (Umum): $e');
+      debugPrint('FrsViewModel: Add Jadwal Error (Umum): $e');
       return false;
     }
   }
 
-  // Method untuk drop schedule juga akan menggunakan _frsService
   Future<bool> dropJadwalFromFrs(int idDetailFrs) async {
     final originalState = _state;
-     _setState(FrsViewState.submitting, msg: 'Menghapus mata kuliah...');
+    _setState(FrsViewState.submitting, msg: 'Menghapus mata kuliah...');
     try {
-      final response = await _frsService.dropScheduleFromFrs(idDetailFrs); // <--- Gunakan _frsService
+      final response = await _frsService.dropScheduleFromFrs(idDetailFrs);
       _message = response['message'] as String? ?? 'Mata kuliah berhasil dihapus.';
 
-      await fetchFrsData(); // Refresh data
+      // Refresh data after successful deletion
+      await fetchFrsData();
       if(_state == FrsViewState.loaded){
-         _message = response['message'] as String? ?? 'Mata kuliah dihapus dan data diperbarui.';
-         notifyListeners();
-         return true;
+        _message = response['message'] as String? ?? 'Mata kuliah dihapus dan data diperbarui.';
+        notifyListeners();
+        return true;
       }
-      return false;
-
+      return false; // If fetchFrsData fails, return false
     } on TimeoutException catch (e) {
       _setState(originalState, msg: 'Koneksi ke server time out saat menghapus.');
+      debugPrint('FrsViewModel: Drop Jadwal Error (TimeoutException): $e');
       return false;
     } on http.ClientException catch (e) {
-       _setState(originalState, msg: 'Gagal terhubung ke server saat menghapus.');
-       return false;
+      _setState(originalState, msg: 'Gagal terhubung ke server saat menghapus.');
+      debugPrint('FrsViewModel: Drop Jadwal Error (ClientException): ${e.message}');
+      return false;
     } catch (e) {
       _setState(originalState, msg: e.toString().replaceFirst('Exception: ', ''));
+      debugPrint('FrsViewModel: Drop Jadwal Error (Umum): $e');
       return false;
     }
   }

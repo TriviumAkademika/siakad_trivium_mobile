@@ -1,20 +1,17 @@
-// lib/views/frs/tambah_frs.dart (atau path Anda saat ini)
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:siakad_trivium/style.dart';
 import 'package:siakad_trivium/viewmodels/frs_viewmodel.dart';
-// Jika JadwalTersedia ada di frs_service.dart:
-import 'package:siakad_trivium/services/frs_service.dart' show JadwalTersedia;
-// Jika JadwalTersedia ada di file model terpisah misal lib/models/jadwal_model.dart:
-// import 'package:siakad_trivium/models/jadwal_model.dart';
+import 'package:siakad_trivium/services/frs_service.dart' show JadwalTersedia; // Make sure this is correctly imported
 import 'package:siakad_trivium/views/widgets/custom_navbar.dart';
 import 'package:siakad_trivium/views/widgets/custom_scrollbar.dart';
-import 'package:siakad_trivium/views/widgets/frs_add_card.dart';
-
+import 'package:siakad_trivium/views/widgets/frs_add_card.dart'; // Ensure this widget exists
 
 class TambahFrsPage extends StatefulWidget {
-  const TambahFrsPage({super.key});
+  // Add the required parameter here
+  final List<JadwalTersedia> availableSchedules;
+
+  const TambahFrsPage({Key? key, required this.availableSchedules}) : super(key: key); // Make it required
 
   @override
   State<TambahFrsPage> createState() => _TambahFrsPageState();
@@ -24,6 +21,11 @@ class _TambahFrsPageState extends State<TambahFrsPage> {
   @override
   void initState() {
     super.initState();
+    // In TambahFrsPage, you might not need to fetchFrsData again if you're passing
+    // availableSchedules from the previous page. If you still want to ensure
+    // the latest data or filter here, keep it. For simplicity, if availableSchedules
+    // is passed and is sufficient, you could remove this.
+    // For now, I'll keep it as it seems you might want to fetch based on current FRS state.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<FrsViewModel>(context, listen: false).fetchFrsData();
     });
@@ -33,12 +35,17 @@ class _TambahFrsPageState extends State<TambahFrsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: CustomNavbar(title: 'Tambah Mata Kuliah FRS'),
+      appBar: const CustomNavbar(title: 'Tambah Mata Kuliah FRS'),
       body: Consumer<FrsViewModel>(
         builder: (context, viewModel, child) {
-          // ... (UI logic sama seperti sebelumnya, menggunakan viewModel dari FrsViewModel) ...
-          // ... (Pastikan semua referensi ke model JadwalTersedia benar) ...
-          if (viewModel.state == FrsViewState.loading && viewModel.jadwalTersedia.isEmpty) {
+          // You should use widget.availableSchedules if you're passing them,
+          // or viewModel.jadwalTersedia if you're fetching them again in this page's initState.
+          // Based on your Frs widget, you're passing `availableSchedules` directly.
+          // Let's use `widget.availableSchedules` as the primary source for display in TambahFrsPage.
+          final List<JadwalTersedia> schedulesToDisplay = widget.availableSchedules;
+
+
+          if (viewModel.state == FrsViewState.loading && schedulesToDisplay.isEmpty) {
             return const Center(child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF152556)),
             ));
@@ -54,6 +61,7 @@ class _TambahFrsPageState extends State<TambahFrsPage> {
                     Text(viewModel.message.isNotEmpty ? viewModel.message : 'Gagal memuat data.', textAlign: TextAlign.center),
                     const SizedBox(height: 10),
                     ElevatedButton(
+                      // This button will refresh the FRS data which also updates availableSchedules
                       onPressed: () => viewModel.fetchFrsData(),
                       child: const Text('Coba Lagi'),
                     )
@@ -63,7 +71,7 @@ class _TambahFrsPageState extends State<TambahFrsPage> {
             );
           }
 
-          if (viewModel.jadwalTersedia.isEmpty && viewModel.state == FrsViewState.loaded) {
+          if (schedulesToDisplay.isEmpty && viewModel.state == FrsViewState.loaded) {
             return const Center(child: Text('Tidak ada jadwal mata kuliah yang tersedia untuk ditambahkan.'));
           }
           
@@ -74,7 +82,7 @@ class _TambahFrsPageState extends State<TambahFrsPage> {
 
           return CustomScrollbar(
             child: RefreshIndicator(
-              onRefresh: () => viewModel.fetchFrsData(),
+              onRefresh: () => viewModel.fetchFrsData(), // Still useful for refreshing the total SKS info
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Padding(
@@ -82,7 +90,7 @@ class _TambahFrsPageState extends State<TambahFrsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       if (totalSksInfo.isNotEmpty) ...[
+                      if (totalSksInfo.isNotEmpty) ...[
                         Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
                           child: Text(totalSksInfo, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
@@ -96,9 +104,9 @@ class _TambahFrsPageState extends State<TambahFrsPage> {
                       ListView.separated(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: viewModel.jadwalTersedia.length,
+                        itemCount: schedulesToDisplay.length, // Use schedulesToDisplay
                         itemBuilder: (context, index) {
-                          final jadwal = viewModel.jadwalTersedia[index];
+                          final jadwal = schedulesToDisplay[index]; // Use schedulesToDisplay
                           return FrsAddCard(
                             jenis: jadwal.jenisMatkul ?? "Mata Kuliah",
                             sks: jadwal.sks.toString(),
@@ -114,6 +122,8 @@ class _TambahFrsPageState extends State<TambahFrsPage> {
                                   backgroundColor: success ? Colors.green : Colors.red,
                                 ),
                               );
+                              // Pop the current page after adding, and send a result back to Frs page
+                              Navigator.pop(context, success);
                             },
                           );
                         },

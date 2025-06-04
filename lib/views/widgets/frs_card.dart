@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:siakad_trivium/style.dart'; // Pastikan style.dart ada dan berisi brand50, hitam, brand950, brand100
+import 'package:siakad_trivium/style.dart';
 
-class FrsDropCard extends StatelessWidget {
+class FrsCard extends StatelessWidget {
+  final int idDetailFrs; // Add this to pass the ID for deletion
   final String jenis;
   final String sks;
   final String namaMatkul;
@@ -10,8 +11,9 @@ class FrsDropCard extends StatelessWidget {
   final String? dosen2;
   final VoidCallback? onDelete;
 
-  const FrsDropCard({
+  const FrsCard({
     Key? key,
+    required this.idDetailFrs, // Make it required
     required this.jenis,
     required this.sks,
     required this.namaMatkul,
@@ -41,9 +43,9 @@ class FrsDropCard extends StatelessWidget {
                   color: hitam,
                 ),
               ),
-              Text(' - '),
+              const Text(' - '),
               Text(
-                sks,
+                '$sks SKS', // Add SKS unit for clarity
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -56,7 +58,6 @@ class FrsDropCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Expanded Matkul + Dosen
               Expanded(
                 flex: 5,
                 child: Container(
@@ -67,7 +68,7 @@ class FrsDropCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border(
                       left: BorderSide(color: brand950, width: 4),
-                    ), // Anda mengubah width jadi 4
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +90,7 @@ class FrsDropCard extends StatelessWidget {
                           fontSize: 14,
                           color: hitam,
                         ),
-                        maxLines: 1, // Tambahkan ini agar konsisten
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       if (dosen2 != null && dosen2!.isNotEmpty) ...[
@@ -100,7 +101,7 @@ class FrsDropCard extends StatelessWidget {
                             fontSize: 14,
                             color: hitam,
                           ),
-                          maxLines: 1, // Tambahkan ini agar konsisten
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
@@ -108,10 +109,9 @@ class FrsDropCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 8), // Jarak antar expanded
-              // Container icon
+              const SizedBox(width: 8),
               Expanded(
-                flex: 1, // Sesuaikan flex agar proporsional
+                flex: 1,
                 child: Container(
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(
@@ -124,7 +124,7 @@ class FrsDropCard extends StatelessWidget {
                   ),
                   child: IconButton(
                     onPressed: onDelete,
-                    icon: Icon(Icons.delete, color: merah),
+                    icon: Icon(Icons.delete, color: merah), // Make sure 'merah' is defined in style.dart
                     tooltip: "Drop FRS",
                   ),
                 ),

@@ -142,7 +142,7 @@ class FrsService {
 
     final response = await http
         .post(
-          Uri.parse('$_baseUrl/mahasiswa/frs/current/add-schedules'),
+          Uri.parse('$_baseUrl/mahasiswa/frs/courses'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'Accept': 'application/json',
@@ -186,7 +186,7 @@ class FrsService {
     final response = await http
         .delete(
           // Menggunakan DELETE
-          Uri.parse('$_baseUrl/mahasiswa/frs/drop/$idDetailFrs'),
+          Uri.parse('$_baseUrl/mahasiswa/frs/courses/$idDetailFrs'),
           headers: <String, String>{
             'Accept': 'application/json',
             'Authorization': 'Bearer $token',
