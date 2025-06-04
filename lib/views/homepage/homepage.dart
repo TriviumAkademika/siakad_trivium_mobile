@@ -7,6 +7,7 @@ import 'package:siakad_trivium/views/profile/profile.dart';
 import 'package:siakad_trivium/views/dosen/dosen.dart';
 import 'package:siakad_trivium/views/jadwal/jadwal.dart';
 import 'package:siakad_trivium/views/nilai/nilai.dart';
+import 'package:siakad_trivium/views/frs/frs.dart';
 import 'package:siakad_trivium/views/widgets/user_greeting_widget.dart';
 import 'package:siakad_trivium/views/widgets/homepage_menu_item_widget.dart';
 import 'package:siakad_trivium/views/widgets/news_section_widget.dart';
@@ -187,9 +188,7 @@ class _HomepageState extends State<Homepage> {
                       imagePath: 'lib/assets/ikon/folder.png',
                       label: 'FRS',
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Halaman FRS belum diimplementasikan'))
-                        );
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const Frs()));
                       },
                     ),
                   ],
