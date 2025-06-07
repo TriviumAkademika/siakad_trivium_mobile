@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siakad_trivium/models/user_profile_model.dart'; // Sesuaikan path
 
 class ProfileService {
-  static const String _baseUrl = 'http://10.0.2.2:8000/api'; // << GANTI IP JIKA PERLU
+  static const String _baseUrl = 'http://192.168.96.123:8000/api'; // << GANTI IP JIKA PERLU
 
   Future<UserProfileResponse> getProfile() async {
     // ... (kode sama seperti sebelumnya)

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart'; // Tambahkan ini
 import '../models/berita.dart'; // Pastikan path ini benar
 
 class BeritaService {
-  static const String _baseUrl = "http://10.0.2.2:8000/api";
+  static const String _baseUrl = "http://192.168.96.123:8000/api";
 
   // Helper untuk mendapatkan token
   Future<String?> _getToken() async {

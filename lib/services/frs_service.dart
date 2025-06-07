@@ -121,7 +121,7 @@ class DetailFrsItem {
 }
 
 class FrsService {
-  static const String _baseUrl = 'http://10.0.2.2:8000/api'; // <--- GANTI IP JIKA PERLU
+  static const String _baseUrl = 'http://192.168.96.123:8000/api'; // <--- GANTI IP JIKA PERLU
 
   Future<Map<String, dynamic>> getCurrentFrsData() async {
     final prefs = await SharedPreferences.getInstance();

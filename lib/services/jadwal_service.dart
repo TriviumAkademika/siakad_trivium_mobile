@@ -6,7 +6,7 @@ import 'package:siakad_trivium/models/jadwal_model.dart'; // Sesuaikan path
 
 class JadwalService {
   // Sesuaikan dengan base URL API Anda
-  static const String _baseUrl = "http://10.0.2.2:8000/api"; // GANTI JIKA PERLU
+  static const String _baseUrl = "http://192.168.96.123:8000/api"; // GANTI JIKA PERLU
 
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();

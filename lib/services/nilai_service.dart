@@ -5,7 +5,7 @@ import 'package:siakad_trivium/models/nilai_mahasiswa_model.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Untuk ambil token
 
 class NilaiService {
-  static const String _apiUrl = 'http://10.0.2.2:8000/api';
+  static const String _apiUrl = 'http://192.168.96.123:8000/api';
   /* static const String _apiUrl = 'http://192.168.96.123:8000/api'; */
 
   Future<String?> _getToken() async {

@@ -6,7 +6,7 @@ import 'dart:async'; // Untuk TimeoutException
 
 class AuthService {
   // --- PENTING: SESUAIKAN IP ADDRESS DAN PORT SERVER ANDA ---
-  static const String _apiUrl = 'http://10.0.2.2:8000/api/login';
+  static const String _apiUrl = 'http://192.168.96.123:8000/api/login';
   /* static const String _apiUrl = 'http://192.168.96.123:8000/api/login'; */
 
   Future<Map<String, dynamic>> login(String email, String password) async {

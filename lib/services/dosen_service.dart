@@ -5,7 +5,7 @@ import 'package:siakad_trivium/models/dosen_model.dart';
 import 'package:siakad_trivium/utils/shared_pref_helper.dart';
 
 class DosenService {
-  final String _baseUrl = 'http://10.0.2.2:8000/api';
+  final String _baseUrl = 'http://192.168.96.123:8000/api';
 
   // Menggunakan SharedPrefHelper untuk mengambil token
   Future<String?> _getToken() async {
